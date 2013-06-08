@@ -105,7 +105,7 @@ var defaults = {
 	applications: "",
 	styles: "",
 	translator: {
-		translations: ""
+		translations: "",
 		script: ""
 	}
 };
@@ -133,7 +133,7 @@ var defaults = {
 	applications: "",
 	styles: "",
 	translator: {
-		translations: ""
+		translations: "",
 		script: ""
 	},
 	"items": []
