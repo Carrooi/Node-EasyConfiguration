@@ -1,5 +1,0 @@
-{
-	"packages": {
-		"app": "%basePath%/app.js"
-	}
-}
