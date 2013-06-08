@@ -1,6 +1,6 @@
 # Easy Configuration
 
-Simply extensible loader for json config files.
+Simply extensible loader for json config files. This package is inspired by configuration in PHP framework [Nette](http://nette.org/en/).
 
 ## Installing
 
@@ -68,7 +68,7 @@ In your sections, you can use parameters from section "parameters".
 ```
 {
 	"packages": {
-		"application": "%basePath%/application.js"
+		"application": "%basePath%/application.js",
 		"translator": {
 			"translations": "%shared.translations%",
 			"script": "%basePath%/translator.js"
@@ -111,10 +111,10 @@ var defaults = {
 };
 
 section.loadConfiguration = function() {
-	return this.getConfig(defaults)
+	return this.getConfig(defaults);
 };
 
-var data = config.load()
+var data = config.load();
 ```
 
 Method getConfig has got one optional argument and it is your defaults variable. This method will return configuration
@@ -155,7 +155,7 @@ section.loadConfiguration = function() {
 	return config;
 };
 
-var data = config.load()
+var data = config.load();
 ```
 
 ## Accessing parameters from outside
