@@ -11,7 +11,7 @@ $ npm install -g easy-configuration
 ## Loading config
 
 ```
-var Configuration = require('EasyConfiguration');
+var Configuration = require('easy-configuration');
 var config = new Configuration('./config.json');
 
 var data = config.load();
@@ -52,7 +52,7 @@ but there is no corresponding extension.
 There is example of registration a new one.
 
 ```
-var Configuration = require('EasyConfiguration');
+var Configuration = require('easy-configuration');
 var config = new Configuration('./config.json');
 
 config.addSection('packages');
@@ -96,7 +96,7 @@ of default Extension class.
 For example we always want some other data in our section, even if they are not in config file - let's say "defaults".
 
 ```
-var Configuration = require('EasyConfiguration');
+var Configuration = require('easy-configuration');
 var config = new Configuration('./config.json');
 
 var section = config.addSection('packages');
@@ -124,7 +124,7 @@ Of course, there can be more complex code.
 EasyConfiguration class has got one other useful method and it is merge.
 
 ```
-var Configuration = require('EasyConfiguration');
+var Configuration = require('easy-configuration');
 var config = new Configuration('./config.json');
 
 var section = config.addSection('packages');
@@ -161,7 +161,7 @@ var data = config.load();
 ## Accessing parameters from outside
 
 ```
-var Configuration = require('EasyConfiguration');
+var Configuration = require('easy-configuration');
 var config = new Configuration('./config.json');
 
 var data = config.load();
