@@ -1,0 +1,16 @@
+{
+	"includes": [
+		"./packages.json"
+	],
+	"parameters": {
+		"basePath": ".",
+		"share": {
+			"images": "./images",
+			"icons": "./icons",
+			"styles": "./css"
+		}
+	},
+	"packages": {
+		"translator": "%basePath%/%share.translator%/Translator"
+	}
+}

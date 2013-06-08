@@ -1,0 +1,24 @@
+{
+	"includes": [
+		"./app.json"
+	],
+	"parameters": {
+		"share": {
+			"translator": "./lang"
+		}
+	},
+	"packages": {
+		"styles": [
+			"%basePath%/%share.styles%/style.css"
+		],
+		"items": [
+			{
+				"name": "first"
+			},
+			{
+				"name": "second",
+				"allowed": false
+			}
+		]
+	}
+}
