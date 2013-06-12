@@ -15,6 +15,8 @@ class EasyConfiguration
 
 	parameters: {}
 
+	data: null
+
 
 	constructor: (fileName) ->
 		@fileName = path.resolve(fileName)
@@ -35,14 +37,17 @@ class EasyConfiguration
 
 
 	load: ->
-		config = @loadConfig(@fileName)
+		if @data == null
+			config = @loadConfig(@fileName)
 
-		@_parameters = config._parameters
-		@parameters = config.parameters
+			@_parameters = config._parameters
+			@parameters = config.parameters
 
-		config.data = @parse(config.data)
+			config.data = @parse(config.data)
 
-		return config.data
+			@data = config.data
+
+		return @data
 
 
 	loadConfig: (file) ->
@@ -96,6 +101,9 @@ class EasyConfiguration
 
 
 	parse: (data) ->
+		for name, section of @extensions
+			if typeof data[name] == 'undefined' then data[name] = {}
+
 		for name, section of data
 			if typeof @extensions[name] == 'undefined'
 				throw new Error 'Found section ' + name + ' but there is no coresponding extension.'
