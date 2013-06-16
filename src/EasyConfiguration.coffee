@@ -50,6 +50,11 @@ class EasyConfiguration
 		return @data
 
 
+	invalidate: ->
+		@data = null
+		return @
+
+
 	loadConfig: (file) ->
 		if !fs.existsSync(file)
 			throw new Error 'Config file ' + file + ' does not exists.'
