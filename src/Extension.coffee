@@ -6,12 +6,6 @@ class Extension
 	data: null
 
 
-	setConfigurator: (@configurator) ->
-
-
-	setData: (@data) ->
-
-
 	getConfig: (defaults = null) ->
 		if @data == null
 			@configurator.load()

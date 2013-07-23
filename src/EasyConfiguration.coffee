@@ -30,7 +30,7 @@ class EasyConfiguration
 		if @reserved.indexOf(name) != -1
 			throw new Error 'Extension\'s name ' + name + ' is reserved.'
 
-		extension.setConfigurator(@)
+		extension.configurator = @
 
 		@extensions[name] = extension
 		return @extensions[name]
@@ -113,7 +113,7 @@ class EasyConfiguration
 			if typeof @extensions[name] == 'undefined'
 				throw new Error 'Found section ' + name + ' but there is no coresponding extension.'
 
-			@extensions[name].setData(section)
+			@extensions[name].data = section
 
 			data[name] = @extensions[name].loadConfiguration()
 			data[name] = @expand(data[name])
