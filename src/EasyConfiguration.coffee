@@ -1,5 +1,4 @@
-path = require 'path'
-fs = require 'fs'
+merge = require 'tea-merge'
 Extension = require './Extension'
 
 class EasyConfiguration
@@ -18,8 +17,7 @@ class EasyConfiguration
 	data: null
 
 
-	constructor: (fileName) ->
-		@fileName = path.resolve(fileName)
+	constructor: (@fileName) ->
 
 
 	addSection: (name) ->
@@ -56,14 +54,11 @@ class EasyConfiguration
 
 
 	loadConfig: (file) ->
-		if !fs.existsSync(file)
-			throw new Error 'Config file ' + file + ' does not exists.'
-
 		data =
 			includes: []
 			_parameters: {}
 			parameters: {}
-			data: JSON.parse(fs.readFileSync(file))
+			data: require(file)
 
 		if typeof data.data.includes != 'undefined'
 			data.includes = data.data.includes
@@ -93,7 +88,7 @@ class EasyConfiguration
 
 	prepare: (data, parent) ->
 		for file in data.includes
-			file = path.resolve(path.dirname(parent), file)
+			file = @normalizePath(@dirName(parent) + '/' + file)
 
 			config = @loadConfig(file)
 
@@ -145,26 +140,31 @@ class EasyConfiguration
 
 
 	merge: (left, right) ->
-		type = Object.prototype.toString
+		return merge(left, right)
 
-		if type.call(left) != type.call(right)
-			throw new Error 'Can not merge two different objects.'
 
-		switch type.call(left)
-			when '[object Array]'
-				for value, i in right
-					if left.indexOf(value) == -1
-						left.push(value)
-					else if type.call(value) == '[object Array]' || type.call(value) == '[object Object]'
-						left[i] = @merge(left[i], value)
-			when '[object Object]'
-				for name, value of right
-					if typeof left[name] == 'undefined'
-						left[name] = value
-					else if type.call(value) == '[object Array]' || type.call(value) == '[object Object]'
-						left[name] = @merge(left[name], value)
+	dirName: (path) ->
+		num = path.lastIndexOf('/')
+		return path.substr(0, num)
 
-		return left
+
+	normalizePath: (path) ->
+		parts = path.split('/')
+
+		result = []
+		prev = null
+
+		for part in parts
+			if part == '.' || part == ''
+				continue
+			else if part == '..' && prev
+				result.pop()
+			else
+				result.push(part)
+
+			prev = part
+
+		return '/' + result.join('/')
 
 
 module.exports = EasyConfiguration

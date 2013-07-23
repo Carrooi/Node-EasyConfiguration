@@ -12,10 +12,14 @@ $ npm install -g easy-configuration
 
 ```
 var Configuration = require('easy-configuration');
-var config = new Configuration('./config.json');
+var config = new Configuration('/var/data/config.json');
 
 var data = config.load();
 ```
+
+Be carefull with setting your path to the config file. Easy-Configuration uses required instead of fs module, because of
+ability to use it in browser. If you will set this path relativelly, then it will be relative to the Easy-Configuration
+file, not to your actual file.
 
 ## Parameters
 In default, this configurator contains two basic sections: parameters and includes.
@@ -121,7 +125,7 @@ Method getConfig has got one optional argument and it is your defaults variable.
 only of your section merged with defaults argument (if any).
 Of course, there can be more complex code.
 
-EasyConfiguration class has got one other useful method and it is merge.
+EasyConfiguration class has got one other useful method and it is merge (using [tea-merge](https://npmjs.org/package/tea-merge)).
 
 ```
 var Configuration = require('easy-configuration');
