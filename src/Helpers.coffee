@@ -4,7 +4,7 @@ class Helpers
 
 
 	@merge: (left, right) ->
-		return merge(left, right)
+		return merge(right, left)
 
 
 	@dirName: (path) ->
@@ -83,13 +83,16 @@ class Helpers
 			)
 
 		switch Object.prototype.toString.call(data)
-			when '[object String]' then data = replace(data)
+			when '[object String]'
+				data = replace(data)
 			when '[object Array]'
 				for value, i in data
 					data[i] = @expandWithParameters(value, parameters)
 			when '[object Object]'
 				for i, value of data
 					data[i] = @expandWithParameters(value, parameters)
+
+		return data
 
 
 	@objectifyParameters: (parameters) ->

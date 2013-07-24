@@ -30,9 +30,9 @@ Parameters section can holds all your variables which you will need in other sec
 	"parameters": {
 		"basePath": "./www",
 		"shared": {
-			"styles": "./www/css",
-			"scripts": "./www/js",
-			"translations": "./www/lang"
+			"styles": "%basePath%/css",
+			"scripts": "%basePath%/js",
+			"translations": "%basePath%/lang"
 		}
 	}
 }

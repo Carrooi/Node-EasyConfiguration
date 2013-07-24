@@ -87,8 +87,6 @@ class EasyConfiguration
 			if typeof @extensions[name] == 'undefined'
 				throw new Error 'Found section ' + name + ' but there is no coresponding extension.'
 
-			result.sections[name] = {}
-
 			@extensions[name].data = section
 
 			section = @extensions[name].loadConfiguration()
