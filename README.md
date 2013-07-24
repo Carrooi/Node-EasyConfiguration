@@ -125,7 +125,7 @@ Method getConfig has got one optional argument and it is your defaults variable.
 only of your section merged with defaults argument (if any).
 Of course, there can be more complex code.
 
-EasyConfiguration class has got one other useful method and it is merge (using [tea-merge](https://npmjs.org/package/tea-merge)).
+EasyConfiguration class has got one other useful method and it is merge.
 
 ```
 var Configuration = require('easy-configuration');
