@@ -1,4 +1,3 @@
-merge = require 'tea-merge'
 Extension = require './Extension'
 Helpers = require './Helpers'
 
