@@ -1,5 +1,6 @@
 merge = require 'tea-merge'
 Extension = require './Extension'
+Helpers = require './Helpers'
 
 class EasyConfiguration
 
@@ -10,7 +11,7 @@ class EasyConfiguration
 
 	extensions: {}
 
-	_parameters: {}
+	files: []
 
 	parameters: {}
 
@@ -34,137 +35,79 @@ class EasyConfiguration
 		return @extensions[name]
 
 
-	load: ->
-		if @data == null
-			config = @loadConfig(@fileName)
-
-			@_parameters = config._parameters
-			@parameters = config.parameters
-
-			config.data = @parse(config.data)
-
-			@data = config.data
-
-		return @data
-
-
 	invalidate: ->
 		@data = null
 		return @
 
 
+	load: ->
+		if @data == null
+			config = @loadConfig(@fileName)
+			data = @parse(config)
+
+			@files = data.files
+			@parameters = data.parameters
+			@data = data.sections
+
+		return @data
+
+
+
 	loadConfig: (file) ->
-		data =
-			includes: []
-			_parameters: {}
-			parameters: {}
-			data: require(file)
+		data = require(file)
 
-		if typeof data.data.includes != 'undefined'
-			data.includes = data.data.includes
-			delete data.data.includes
-
-		if typeof data.data.parameters != 'undefined'
-			data.parameters = data.data.parameters
-			data._parameters = @parseParameters(data.parameters)
-			delete data.data.parameters
-
-		data = @prepare(data, file)
-
-		return data
-
-
-	parseParameters: (parameters, parent = null) ->
-		result = {}
-
-		if Object.prototype.toString.call(parameters) == '[object Object]'
-			for name, value of parameters
-				result = @merge(result, @parseParameters(value, if parent == null then name else parent + '.' + name))
-		else
-			result[parent] = parameters
-
-		return result
-
-
-	prepare: (data, parent) ->
-		for file in data.includes
-			file = @normalizePath(@dirName(parent) + '/' + file)
-
-			config = @loadConfig(file)
-
-			data.includes = @merge(config.includes, data.includes)
-			data.parameters = @merge(config.parameters, data.parameters)
-			data._parameters = @merge(config._parameters, data._parameters)
-			data.data = @merge(config.data, data.data)
+		if typeof data.includes != 'undefined'
+			for include in data.includes
+				path = Helpers.normalizePath(Helpers.dirName(file) + '/' + include)
+				data = @merge(data, @loadConfig(path))
 
 		return data
 
 
 	parse: (data) ->
+		result =
+			files: []
+			parameters: {}
+			sections: {}
+
+		if typeof data.includes != 'undefined'
+			result.files = data.includes
+
+		if typeof data.parameters != 'undefined'
+			result.parameters = @expandParameters(data.parameters)
+
 		for name, section of @extensions
 			if typeof data[name] == 'undefined' then data[name] = {}
 
-		for name, section of data
+		sections = data
+		if typeof sections.parameters != 'undefined' then delete sections.parameters
+		if typeof sections.includes != 'undefined' then delete sections.includes
+
+		for name, section of sections
 			if typeof @extensions[name] == 'undefined'
 				throw new Error 'Found section ' + name + ' but there is no coresponding extension.'
 
+			result.sections[name] = {}
+
 			@extensions[name].data = section
 
-			data[name] = @extensions[name].loadConfiguration()
-			data[name] = @expand(data[name])
+			section = @extensions[name].loadConfiguration()
+			section = Helpers.expandWithParameters(section, result.parameters)
 
-		return data
+			result.sections[name] = section
 
-
-	expand: (data) ->
-		switch Object.prototype.toString.call(data)
-			when '[object String]' then data = @expandParameter(data)
-			when '[object Array]'
-				for value, i in data
-					data[i] = @expand(value)
-			when '[object Object]'
-				for i, value of data
-					data[i] = @expand(value)
-
-		return data
+		return result
 
 
-	expandParameter: (parameter) ->
-		parameter = parameter.replace(/%([a-zA-Z\.]+)%/g, (match, param, offset, s) =>
-			if typeof @_parameters[param] == 'undefined'
-				throw new Error 'Parameter ' + param + ' is not defined.'
-
-			return @_parameters[param]
-		)
-		return parameter
+	expandParameters: (parameters) ->
+		parameters = Helpers.stringifyParameters(parameters)
+		parameters = Helpers.expandParameters(parameters)
+		parameters = Helpers.objectifyParameters(parameters)
+		return parameters
 
 
 	merge: (left, right) ->
-		return merge(left, right)
-
-
-	dirName: (path) ->
-		num = path.lastIndexOf('/')
-		return path.substr(0, num)
-
-
-	normalizePath: (path) ->
-		parts = path.split('/')
-
-		result = []
-		prev = null
-
-		for part in parts
-			if part == '.' || part == ''
-				continue
-			else if part == '..' && prev
-				result.pop()
-			else
-				result.push(part)
-
-			prev = part
-
-		return '/' + result.join('/')
+		return Helpers.merge(left, right)
 
 
 module.exports = EasyConfiguration
