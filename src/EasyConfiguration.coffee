@@ -34,6 +34,15 @@ class EasyConfiguration
 		return @extensions[name]
 
 
+	removeExtension: (name) ->
+		if typeof @extensions[name] == 'undefined'
+			throw new Error 'Extension with name ' + name + ' was not found.'
+
+		delete @extensions[name]
+		@invalidate()
+		return @
+
+
 	invalidate: ->
 		@data = null
 		return @

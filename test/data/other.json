@@ -1,0 +1,7 @@
+{
+	"parameters": {
+		"paths": {
+			"videos": "%base%/videos"
+		}
+	}
+}

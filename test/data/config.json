@@ -1,0 +1,16 @@
+{
+	"includes": [
+		"./other.json"
+	],
+	"parameters": {
+		"base": "./www",
+		"paths": {
+			"lang": "%base%/lang",
+			"translator": "%paths.lang%/translator.js",
+			"images": "%base%/images"
+		},
+		"cached": [
+			"%paths.translator%"
+		]
+	}
+}

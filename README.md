@@ -2,6 +2,10 @@
 
 Simply extensible loader for json config files. This package is inspired by configuration in PHP framework [Nette](http://nette.org/en/).
 
+## Changelog
+
+Changelog is in the bottom of this readme.
+
 ## Installing
 
 ```
@@ -171,3 +175,11 @@ var config = new Configuration('./config.json');
 var data = config.load();
 var parameters = config.parameters;
 ```
+
+## Changelog
+
+* 1.4.0
+	+ Added changelog to readme
+	+ Created tests
+	+ Tests can be runned with `npm test` command
+	+ added removeExtension method
