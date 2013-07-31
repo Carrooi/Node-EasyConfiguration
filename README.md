@@ -178,8 +178,58 @@ var parameters = config.parameters;
 
 ## Changelog
 
+* 1.4.1
+	+ Written rest of this changelog
+
 * 1.4.0
 	+ Added changelog to readme
 	+ Created tests
 	+ Tests can be runned with `npm test` command
-	+ added removeExtension method
+	+ Added removeExtension method
+
+* 1.3.3
+	+ Removed forgotten dependency on mergin module
+
+* 1.3.2
+	+ External merging module removed
+	+ Own old merging function added back
+
+* 1.3.1
+	+ Repaired some bugs with merging
+
+* 1.3.0
+	+ Whole module is rewriten
+
+* 1.2.0
+	+ Trying other external modules for merging
+	+ Removed dependencies on fs and path
+	+ Module can be run also in browser
+
+* 1.1.3
+	+ Added MIT license
+
+* 1.1.2
+	+ GIT repository renamed from Easy-Configuration to node-easy-configuration
+
+* 1.1.1
+	+ Added function for remove loaded data from memory
+
+* 1.1.0
+	+ Storing loaded data in memory
+	+ Empty sections returns empty object and not undefined
+
+* 1.0.4
+	+ Renaming from EasyConfiguration to easy-configuration
+
+* 1.0.3
+	+ Corrected mistakes in readme
+	+ Added link to Nette framework
+
+* 1.0.2
+	+ Corrected mistakes in readme
+
+* 1.0.1
+	+ Corrected mistakes in readme
+
+* 1.0.0
+	+ Initial commit
