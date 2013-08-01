@@ -1,7 +1,7 @@
 {
 	"name": "easy-configuration",
 	"description": "Simply extensible loader for json config files",
-	"version": "1.4.1",
+	"version": "1.4.2",
 	"author": {
 		"name": "David Kudera",
 		"email": "sakren@gmail.com"
@@ -23,6 +23,9 @@
 		"node": "*"
 	},
 	"main": "./lib/EasyConfiguration.js",
+	"dependencies": {
+		"recursive-merge": "latest"
+	},
 	"devDependencies": {
 		"should": "1.2.2"
 	},

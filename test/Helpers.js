@@ -5,37 +5,6 @@
 
 	describe('Helpers', function() {
 
-		describe('#merge()', function() {
-			it('should merge two objects', function() {
-				Helpers.merge({
-					one: {
-						two: 'two',
-						three: 'three'
-					},
-					two: 'two'
-				}, {
-					one: {
-						another: 'another'
-					}
-				}).should.eql({
-					one: {
-						two: 'two',
-						three: 'three',
-						another: 'another'
-					},
-					two: 'two'
-				})
-			});
-
-			it('should merge two arrays', function() {
-				Helpers.merge([1, 2, 3], [4, 'a', 5]).should.eql([1, 2, 3, 4, 'a', 5]);
-			});
-
-			it('should throw error if parameters are not the same type', function() {
-				(function() { Helpers.merge([], {}); }).should.throw();
-			});
-		});
-
 		describe('#dirName()', function() {
 			it('should return name of file\'s directory', function() {
 				Helpers.dirName('/var/www/data/something.js').should.equal('/var/www/data');

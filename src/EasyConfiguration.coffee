@@ -1,3 +1,4 @@
+merge = require 'recursive-merge'
 Extension = require './Extension'
 Helpers = require './Helpers'
 
@@ -113,7 +114,7 @@ class EasyConfiguration
 
 
 	merge: (left, right) ->
-		return Helpers.merge(left, right)
+		return merge(left, right)
 
 
 module.exports = EasyConfiguration

@@ -1,27 +1,6 @@
+merge = require 'recursive-merge'
+
 class Helpers
-
-
-	@merge: (left, right) ->
-		type = Object.prototype.toString
-
-		if type.call(left) != type.call(right)
-			throw new Error 'Can not merge two different objects.'
-
-		switch type.call(left)
-			when '[object Array]'
-				for value, i in right
-					if left.indexOf(value) == -1
-						left.push(value)
-					else if type.call(value) == '[object Array]' || type.call(value) == '[object Object]'
-						left[i] = @merge(left[i], value)
-			when '[object Object]'
-				for name, value of right
-					if typeof left[name] == 'undefined'
-						left[name] = value
-					else if type.call(value) == '[object Array]' || type.call(value) == '[object Object]'
-						left[name] = @merge(left[name], value)
-
-		return left
 
 
 	@dirName: (path) ->
@@ -56,7 +35,7 @@ class Helpers
 			type = Object.prototype.toString.call(value)
 
 			if type == '[object Object]'
-				result = @merge(result, @stringifyParameters(value, name))
+				result = merge(result, @stringifyParameters(value, name))
 			else
 				result[name] = value
 

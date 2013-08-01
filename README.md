@@ -129,7 +129,7 @@ Method getConfig has got one optional argument and it is your defaults variable.
 only of your section merged with defaults argument (if any).
 Of course, there can be more complex code.
 
-EasyConfiguration class has got one other useful method and it is merge.
+EasyConfiguration class has got one other useful method and it is merge (using [recursive-merge](https://npmjs.org/package/recursive-merge) package).
 
 ```
 var Configuration = require('easy-configuration');
@@ -177,6 +177,9 @@ var parameters = config.parameters;
 ```
 
 ## Changelog
+
+* 1.4.2
+	+ Merging uses [recursive-merge](https://npmjs.org/package/recursive-merge) package
 
 * 1.4.1
 	+ Written rest of this changelog
