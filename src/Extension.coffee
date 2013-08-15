@@ -20,4 +20,8 @@ class Extension
 		return @getConfig()
 
 
+	afterCompile: (data) ->
+		return data
+
+
 module.exports = Extension

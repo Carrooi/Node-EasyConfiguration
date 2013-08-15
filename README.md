@@ -21,8 +21,8 @@ var config = new Configuration('/var/data/config.json');
 var data = config.load();
 ```
 
-Be carefull with setting your path to the config file. Easy-Configuration uses required instead of fs module, because of
-ability to use it in browser. If you will set this path relativelly, then it will be relative to the Easy-Configuration
+Be careful with setting your path to the config file. Easy-Configuration uses required instead of fs module, because of
+ability to use it in browser. If you will set this path relatively, then it will be relative to the Easy-Configuration
 file, not to your actual file.
 
 ## Parameters
@@ -166,6 +166,22 @@ section.loadConfiguration = function() {
 var data = config.load();
 ```
 
+### After compile
+
+All data in loadConfiguration are the same like in your json files - parameters are not yet expanded. If you want to work
+somehow with expanded data, you will need to rewrite afterCompile method.
+
+But even if you use this method, setup styles for your configuration should be set in loadConfiguration method, not in afterCompile.
+
+This method accept one parameter - data which you returned in loadConfiguration method. You also need to return your updated
+data.
+
+```
+section.afterCompile = function(config) {
+	return doSomething(config);
+};
+```
+
 ## Accessing parameters from outside
 
 ```
@@ -178,6 +194,10 @@ var parameters = config.parameters;
 
 ## Changelog
 
+* 1.4.3
+	+ Extension: added afterCompile method
+	+ Some typos in readme
+
 * 1.4.2
 	+ Merging uses [recursive-merge](https://npmjs.org/package/recursive-merge) package
 
@@ -187,11 +207,11 @@ var parameters = config.parameters;
 * 1.4.0
 	+ Added changelog to readme
 	+ Created tests
-	+ Tests can be runned with `npm test` command
+	+ Tests can be run with `npm test` command
 	+ Added removeExtension method
 
 * 1.3.3
-	+ Removed forgotten dependency on mergin module
+	+ Removed forgotten dependency on merging module
 
 * 1.3.2
 	+ External merging module removed
@@ -201,7 +221,7 @@ var parameters = config.parameters;
 	+ Repaired some bugs with merging
 
 * 1.3.0
-	+ Whole module is rewriten
+	+ Whole module is rewritten
 
 * 1.2.0
 	+ Trying other external modules for merging

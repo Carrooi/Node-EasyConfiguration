@@ -100,6 +100,7 @@ class EasyConfiguration
 
 			section = @extensions[name].loadConfiguration()
 			section = Helpers.expandWithParameters(section, result.parameters)
+			section = @extensions[name].afterCompile(section)
 
 			result.sections[name] = section
 
