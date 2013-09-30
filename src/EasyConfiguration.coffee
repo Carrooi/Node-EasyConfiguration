@@ -10,16 +10,19 @@ class EasyConfiguration
 
 	reserved: ['includes', 'parameters']
 
-	extensions: {}
+	extensions: null
 
-	files: []
+	files: null
 
-	parameters: {}
+	parameters: null
 
 	data: null
 
 
 	constructor: (@fileName) ->
+		@extensions = {}
+		@files = []
+		@parameters = {}
 
 
 	addSection: (name) ->
