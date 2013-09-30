@@ -27,7 +27,6 @@
 		"recursive-merge": "~1.0.0"
 	},
 	"devDependencies": {
-		"should": "1.2.2",
 		"chai": "~1.8.0"
 	},
 	"scripts": {
