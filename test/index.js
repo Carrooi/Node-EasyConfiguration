@@ -1,6 +1,2 @@
-(function() {
-
-	require('./Helpers');
-	require('./EasyConfiguration');
-
-})();
+require('./easy-configuration/Helpers');
+require('./easy-configuration/EasyConfiguration');
