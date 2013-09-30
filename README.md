@@ -2,14 +2,10 @@
 
 Simply extensible loader for json config files. This package is inspired by configuration in PHP framework [Nette](http://nette.org/en/).
 
-## Changelog
-
-Changelog is in the bottom of this readme.
-
 ## Installing
 
 ```
-$ npm install -g easy-configuration
+$ npm install easy-configuration
 ```
 
 ## Loading config
@@ -190,6 +186,12 @@ var config = new Configuration('./config.json');
 
 var data = config.load();
 var parameters = config.parameters;
+```
+
+## Tests
+
+```
+$ npm test
 ```
 
 ## Changelog
