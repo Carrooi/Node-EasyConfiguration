@@ -194,6 +194,10 @@ var parameters = config.parameters;
 
 ## Changelog
 
+* 1.4.4
+	+ Optimized dependencies
+	+ Refactoring tests
+
 * 1.4.3
 	+ Extension: added afterCompile method
 	+ Some typos in readme
