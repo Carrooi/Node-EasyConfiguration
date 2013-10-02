@@ -7,6 +7,16 @@
   Helpers = require('../../lib/Helpers');
 
   describe('Helpers', function() {
+    describe('#dirName()', function() {
+      return it('should return name of file\'s directory', function() {
+        return expect(Helpers.dirName('/var/www/data/something.js')).to.be.equal('/var/www/data');
+      });
+    });
+    describe('#normalizePath()', function() {
+      return it('should return normalized and resolved path', function() {
+        return expect(Helpers.normalizePath('/var/www/../www/data/././../../www/data/something.js')).to.be.equal('/var/www/data/something.js');
+      });
+    });
     describe('#stringifyParameters()', function() {
       return it('should return flattened object', function() {
         return expect(Helpers.stringifyParameters({

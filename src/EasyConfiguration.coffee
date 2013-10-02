@@ -1,5 +1,4 @@
 merge = require 'recursive-merge'
-path = require 'path'
 Extension = require './Extension'
 Helpers = require './Helpers'
 
@@ -71,8 +70,8 @@ class EasyConfiguration
 
 		if typeof data.includes != 'undefined'
 			for include in data.includes
-				_path = path.normalize(path.dirname(file) + '/' + include)
-				data = @merge(data, @loadConfig(_path))
+				path = Helpers.normalizePath(Helpers.dirName(file) + '/' + include)
+				data = @merge(data, @loadConfig(path))
 
 		return data
 

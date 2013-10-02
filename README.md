@@ -196,6 +196,9 @@ $ npm test
 
 ## Changelog
 
+* 1.5.1
+	+ Previous version broke support for browser
+
 * 1.5.0
 	+ Optimized dependencies
 	+ Refactoring tests
