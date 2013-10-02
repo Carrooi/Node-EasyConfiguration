@@ -1,5 +1,4 @@
 merge = require 'recursive-merge'
-path = require 'path'
 
 class Helpers
 
