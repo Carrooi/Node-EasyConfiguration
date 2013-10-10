@@ -64,7 +64,6 @@ class EasyConfiguration
 		return @data
 
 
-
 	loadConfig: (file) ->
 		data = require(file)
 
