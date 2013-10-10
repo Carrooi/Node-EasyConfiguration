@@ -1,4 +1,6 @@
 merge = require 'recursive-merge'
+clone = require 'clone'
+
 Extension = require './Extension'
 Helpers = require './Helpers'
 
@@ -66,6 +68,7 @@ class EasyConfiguration
 
 	loadConfig: (file) ->
 		data = require(file)
+		data = clone(data, false)
 
 		if typeof data.includes != 'undefined'
 			for include in data.includes

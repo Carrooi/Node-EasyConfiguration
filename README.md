@@ -196,6 +196,9 @@ $ npm test
 
 ## Changelog
 
+* 1.5.3
+	+ Preparations for new version
+
 * 1.5.2
 	+ Previous version broke support for browser
 

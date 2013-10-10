@@ -24,7 +24,8 @@
 	},
 	"main": "./lib/EasyConfiguration.js",
 	"dependencies": {
-		"recursive-merge": "~1.0.0"
+		"recursive-merge": "~1.0.0",
+		"clone": "~0.1.10"
 	},
 	"devDependencies": {
 		"chai": "~1.8.0"
