@@ -198,6 +198,7 @@ $ npm test
 
 * 1.5.3
 	+ Preparations for new version
+	+ Loaded data are cloned (from require method)
 
 * 1.5.2
 	+ Previous version broke support for browser
