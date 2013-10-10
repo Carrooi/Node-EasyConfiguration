@@ -120,6 +120,7 @@ class EasyConfiguration
 
 
 	merge: (left, right) ->
+		right = clone(right, false)
 		return merge(left, right)
 
 
