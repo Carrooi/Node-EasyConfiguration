@@ -12,56 +12,9 @@
         return expect(Helpers.dirName('/var/www/data/something.js')).to.be.equal('/var/www/data');
       });
     });
-    describe('#normalizePath()', function() {
+    return describe('#normalizePath()', function() {
       return it('should return normalized and resolved path', function() {
         return expect(Helpers.normalizePath('/var/www/../www/data/././../../www/data/something.js')).to.be.equal('/var/www/data/something.js');
-      });
-    });
-    describe('#stringifyParameters()', function() {
-      return it('should return flattened object', function() {
-        return expect(Helpers.stringifyParameters({
-          one: {
-            two: 'two',
-            three: 'three',
-            four: {
-              five: 'five',
-              six: 'six'
-            },
-            seven: 'seven'
-          }
-        })).to.be.eql({
-          'one.two': 'two',
-          'one.three': 'three',
-          'one.four.five': 'five',
-          'one.four.six': 'six',
-          'one.seven': 'seven'
-        });
-      });
-    });
-    describe('#expandParameters()', function() {
-      return it('should expand variables in flattened object', function() {
-        return expect(Helpers.expandParameters({
-          one: 'one',
-          two: '%one%',
-          'three.one': '%two%',
-          four: '%three.one%'
-        })).to.be.eql({
-          one: 'one',
-          two: 'one',
-          'three.one': 'one',
-          four: 'one'
-        });
-      });
-    });
-    return describe('#expandWithParameters()', function() {
-      return it('should expand configuration section with flattened parameters', function() {
-        return expect(Helpers.expandWithParameters({
-          someVariableInSection: '%one.two.three%'
-        }, {
-          'one.two.three': 'hello'
-        })).to.be.eql({
-          someVariableInSection: 'hello'
-        });
       });
     });
   });
