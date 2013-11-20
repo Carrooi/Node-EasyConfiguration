@@ -196,6 +196,9 @@ $ npm test
 
 ## Changelog
 
+* 1.5.5
+	+ Optimized tests
+
 * 1.5.4 - 1.5.6
 	+ Some optimizations
 
