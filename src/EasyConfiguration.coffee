@@ -98,16 +98,17 @@ class EasyConfiguration
 		if typeof sections.includes != 'undefined' then delete sections.includes
 
 		for name, section of sections
-			if sections.hasOwnProperty(name) && name not in ['__proto__'] && typeof @extensions[name] == 'undefined'
-				throw new Error 'Found section ' + name + ' but there is no coresponding extension.'
+			if sections.hasOwnProperty(name) && name not in ['__proto__']
+				if typeof @extensions[name] == 'undefined'
+					throw new Error 'Found section ' + name + ' but there is no coresponding extension.'
 
-			@extensions[name].data = section
+				@extensions[name].data = section
 
-			section = @extensions[name].loadConfiguration()
-			section = Helpers.expandWithParameters(section, result.parameters)
-			section = @extensions[name].afterCompile(section)
+				section = @extensions[name].loadConfiguration()
+				section = Helpers.expandWithParameters(section, result.parameters)
+				section = @extensions[name].afterCompile(section)
 
-			result.sections[name] = section
+				result.sections[name] = section
 
 		return result
 
