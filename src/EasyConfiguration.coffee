@@ -98,7 +98,7 @@ class EasyConfiguration
 		if typeof sections.includes != 'undefined' then delete sections.includes
 
 		for name, section of sections
-			if typeof @extensions[name] == 'undefined'
+			if sections.hasOwnProperty(name) && typeof @extensions[name] == 'undefined'
 				throw new Error 'Found section ' + name + ' but there is no coresponding extension.'
 
 			@extensions[name].data = section

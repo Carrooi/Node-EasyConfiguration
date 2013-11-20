@@ -31,13 +31,14 @@ class Helpers
 		result = {}
 
 		for name, value of parameters
-			name = if parent == null then name else parent + '.' + name
-			type = Object.prototype.toString.call(value)
+			if parameters.hasOwnProperty(name)
+				name = if parent == null then name else parent + '.' + name
+				type = Object.prototype.toString.call(value)
 
-			if type == '[object Object]'
-				result = merge(result, @stringifyParameters(value, name))
-			else
-				result[name] = value
+				if type == '[object Object]'
+					result = merge(result, @stringifyParameters(value, name))
+				else
+					result[name] = value
 
 		return result
 
@@ -64,7 +65,8 @@ class Helpers
 
 		result = {}
 		for name, value of parameters
-			result[name] = parse(value)
+			if parameters.hasOwnProperty(name)
+				result[name] = parse(value)
 
 		return result
 
@@ -86,7 +88,8 @@ class Helpers
 					data[i] = @expandWithParameters(value, parameters)
 			when '[object Object]'
 				for i, value of data
-					data[i] = @expandWithParameters(value, parameters)
+					if data.hasOwnProperty(i)
+						data[i] = @expandWithParameters(value, parameters)
 
 		return data
 

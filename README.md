@@ -196,6 +196,9 @@ $ npm test
 
 ## Changelog
 
+* 1.5.4
+	+ Some optimizations
+
 * 1.5.3
 	+ Preparations for new version
 	+ Loaded data are cloned (from require method)
