@@ -1,3 +1,5 @@
+shims = require './shims'
+
 merge = require 'recursive-merge'
 clone = require 'clone'
 

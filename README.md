@@ -196,11 +196,12 @@ $ npm test
 
 ## Changelog
 
-* 1.5.5
-	+ Optimized tests
+* 1.5.7
+	+	Support for Internet Explorer 8
 
 * 1.5.4 - 1.5.6
 	+ Some optimizations
+	+ Optimized tests
 
 * 1.5.3
 	+ Preparations for new version
