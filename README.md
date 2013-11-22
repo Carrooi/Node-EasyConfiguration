@@ -140,12 +140,12 @@ var defaults = {
 		translations: "",
 		script: ""
 	},
-	"items": []
+	items: []
 };
 
 var defaultsItems = {
-	"name": "",
-	"title": "",
+	name: "",
+	title: "",
 	allowed: true
 };
 
@@ -186,6 +186,10 @@ var config = new Configuration('./config.json');
 
 var data = config.load();
 var parameters = config.parameters;
+
+// or
+
+var parameter = config.getParameter('path.to.some.variable');
 ```
 
 ## Tests
@@ -196,8 +200,13 @@ $ npm test
 
 ## Changelog
 
+* 1.6.0
+	+ Added many tests
+	+ Updated docs
+	+ Rewritten parameters parsing (now much better)
+
 * 1.5.7
-	+	Support for Internet Explorer 8
+	+ Support for Internet Explorer 8
 
 * 1.5.4 - 1.5.6
 	+ Some optimizations

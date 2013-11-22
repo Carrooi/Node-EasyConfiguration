@@ -5,6 +5,7 @@
 	"parameters": {
 		"base": "./www",
 		"paths": {
+			"cdn": "./cdn/data",
 			"lang": "%base%/lang",
 			"translator": "%paths.lang%/translator.js",
 			"images": "%base%/images"

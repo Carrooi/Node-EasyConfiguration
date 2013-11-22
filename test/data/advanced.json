@@ -1,0 +1,15 @@
+{
+	"includes": [
+		"./config.json"
+	],
+	"application": {
+		"path": "%base%",
+		"data": [
+			"%paths.cdn%",
+			"%paths.lang%",
+			"%paths.translator%",
+			"%paths.images%",
+			"%paths.videos%"
+		]
+	}
+}

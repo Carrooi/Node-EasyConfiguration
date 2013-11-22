@@ -17,6 +17,8 @@ class EasyConfiguration
 
 	files: null
 
+	_parameters: null
+
 	parameters: null
 
 	data: null
@@ -25,6 +27,7 @@ class EasyConfiguration
 	constructor: (@fileName) ->
 		@extensions = {}
 		@files = []
+		@_parameters = {}
 		@parameters = {}
 
 
@@ -90,6 +93,7 @@ class EasyConfiguration
 			result.files = data.includes
 
 		if typeof data.parameters != 'undefined'
+			@_parameters = data.parameters
 			result.parameters = @expandParameters(data.parameters)
 
 		for name, section of @extensions
@@ -107,7 +111,7 @@ class EasyConfiguration
 				@extensions[name].data = section
 
 				section = @extensions[name].loadConfiguration()
-				section = Helpers.expandWithParameters(section, result.parameters)
+				section = @expandParameters(section)
 				section = @extensions[name].afterCompile(section)
 
 				result.sections[name] = section
@@ -116,10 +120,44 @@ class EasyConfiguration
 
 
 	expandParameters: (parameters) ->
-		parameters = Helpers.stringifyParameters(parameters)
-		parameters = Helpers.expandParameters(parameters)
-		parameters = Helpers.objectifyParameters(parameters)
+		_type = Object.prototype.toString
+
+		parse = (name, param) =>
+			switch _type.call(param)
+				when '[object String]'
+					parameters[name] = param.replace(/%([a-zA-Z.-_]+)%/g, (match, variable) =>
+						return @getParameter(variable)
+					)
+				when '[object Object]', '[object Array]'
+					parameters[name] = @expandParameters(param)
+				else
+					parameters[name] = param
+
+		type = _type.call(parameters)
+		switch type
+			when '[object Object]'
+				for name, param of parameters
+					parse(name, param)
+			when '[object Array]'
+				for param, name in parameters
+					parse(name, param)
+			else
+				throw new Error "Can not parse #{type} parameters."
+
+
 		return parameters
+
+
+	getParameter: (parameter) ->
+		parts = parameter.split('.')
+		actual = @_parameters
+		for part in parts
+			if typeof actual[part] == 'undefined'
+				throw new Error "Parameter #{parameter} is not defined."
+
+			actual = actual[part]
+
+		return actual
 
 
 	merge: (left, right) ->
