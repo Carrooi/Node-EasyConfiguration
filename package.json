@@ -28,7 +28,8 @@
 		"clone": "~0.1.10"
 	},
 	"devDependencies": {
-		"chai": "~1.8.0"
+		"chai": "~1.8.0",
+		"mocha": "~1.14.0"
 	},
 	"scripts": {
 		"test": "cd ./test; mocha ./node/index.js --reporter spec;"

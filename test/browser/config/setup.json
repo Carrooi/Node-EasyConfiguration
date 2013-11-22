@@ -1,0 +1,15 @@
+{
+	"packages": {
+		"modal": {
+			"base": "../",
+			"application": "./test/application.js",
+			"modules": [
+				"./lib/*.js",
+				"./test/tests/*.coffee"
+			],
+			"run": [
+				"/test/tests/EasyConfiguration.coffee"
+			]
+		}
+	}
+}
