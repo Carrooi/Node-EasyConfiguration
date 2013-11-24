@@ -224,179 +224,6 @@
 	}).call(this);
 	
 
-}, 'clone/clone.js': function(exports, module) {
-
-	/** node globals **/
-	var require = function(name) {return window.require(name, 'clone/clone.js');};
-	require.resolve = function(name, parent) {if (parent === null) {parent = 'clone/clone.js';} return window.require.resolve(name, parent);};
-	require.define = function(bundle) {window.require.define(bundle);};
-	require.cache = window.require.cache;
-	var __filename = 'clone/clone.js';
-	var __dirname = 'clone';
-	var process = {cwd: function() {return '/';}, argv: ['node', 'clone/clone.js'], env: {}};
-
-	/** code **/
-	"use strict";
-	
-	function objectToString(o) {
-	  return Object.prototype.toString.call(o);
-	}
-	
-	var util = {
-	  isArray: function (ar) {
-	    return Array.isArray(ar) || (typeof ar === 'object' && objectToString(ar) === '[object Array]');
-	  },
-	  isDate: function (d) {
-	    return typeof d === 'object' && objectToString(d) === '[object Date]';
-	  },
-	  isRegExp: function (re) {
-	    return typeof re === 'object' && objectToString(re) === '[object RegExp]';
-	  },
-	  getRegExpFlags: function (re) {
-	    var flags = '';
-	    re.global && (flags += 'g');
-	    re.ignoreCase && (flags += 'i');
-	    re.multiline && (flags += 'm');
-	    return flags;
-	  }
-	};
-	
-	if (typeof module === 'object')
-	  module.exports = clone;
-	
-	/**
-	 * Clones (copies) an Object using deep copying.
-	 *
-	 * This function supports circular references by default, but if you are certain
-	 * there are no circular references in your object, you can save some CPU time
-	 * by calling clone(obj, false).
-	 *
-	 * Caution: if `circular` is false and `parent` contains circular references,
-	 * your program may enter an infinite loop and crash.
-	 *
-	 * @param `parent` - the object to be cloned
-	 * @param `circular` - set to true if the object to be cloned may contain
-	 *    circular references. (optional - true by default)
-	*/
-	function clone(parent, circular) {
-	  if (typeof circular == 'undefined')
-	    circular = true;
-	
-	  var useBuffer = typeof Buffer != 'undefined';
-	
-	  var circularParent = {};
-	  var circularResolved = {};
-	  var circularReplace = [];
-	
-	  function _clone(parent, context, child, cIndex) {
-	    var i; // Use local context within this function
-	    // Deep clone all properties of parent into child
-	    if (typeof parent == 'object') {
-	      if (parent == null)
-	        return parent;
-	      // Check for circular references
-	      for(i in circularParent)
-	        if (circularParent[i] === parent) {
-	          // We found a circular reference
-	          circularReplace.push({'resolveTo': i, 'child': child, 'i': cIndex});
-	          return null; //Just return null for now...
-	          // we will resolve circular references later
-	        }
-	
-	      // Add to list of all parent objects
-	      circularParent[context] = parent;
-	      // Now continue cloning...
-	      if (util.isArray(parent)) {
-	        child = [];
-	        for(i in parent)
-	          child[i] = _clone(parent[i], context + '[' + i + ']', child, i);
-	      }
-	      else if (util.isDate(parent))
-	        child = new Date(parent.getTime());
-	      else if (util.isRegExp(parent)) {
-	        child = new RegExp(parent.source, util.getRegExpFlags(parent));
-	        if (parent.lastIndex) child.lastIndex = parent.lastIndex;
-	      } else if (useBuffer && Buffer.isBuffer(parent))
-	      {
-	        child = new Buffer(parent.length);
-	        parent.copy(child);
-	      }
-	      else {
-	        child = {};
-	
-	        // Also copy prototype over to new cloned object
-	        child.__proto__ = parent.__proto__;
-	        for(i in parent)
-	          child[i] = _clone(parent[i], context + '[' + i + ']', child, i);
-	      }
-	
-	      // Add to list of all cloned objects
-	      circularResolved[context] = child;
-	    }
-	    else
-	      child = parent; //Just a simple shallow copy will do
-	    return child;
-	  }
-	
-	  var i;
-	  if (circular) {
-	    var cloned = _clone(parent, '*');
-	
-	    // Now this object has been cloned. Let's check to see if there are any
-	    // circular references for it
-	    for(i in circularReplace) {
-	      var c = circularReplace[i];
-	      if (c && c.child && c.i in c.child) {
-	        c.child[c.i] = circularResolved[c.resolveTo];
-	      }
-	    }
-	    return cloned;
-	  } else {
-	    // Deep clone all properties of parent into child
-	    var child;
-	    if (typeof parent == 'object') {
-	      if (parent == null)
-	        return parent;
-	      if (parent.constructor.name === 'Array') {
-	        child = [];
-	        for(i in parent)
-	          child[i] = clone(parent[i], circular);
-	      }
-	      else if (util.isDate(parent))
-	        child = new Date(parent.getTime() );
-	      else if (util.isRegExp(parent)) {
-	        child = new RegExp(parent.source, util.getRegExpFlags(parent));
-	        if (parent.lastIndex) child.lastIndex = parent.lastIndex;
-	      } else {
-	        child = {};
-	        child.__proto__ = parent.__proto__;
-	        for(i in parent)
-	          child[i] = clone(parent[i], circular);
-	      }
-	    }
-	    else
-	      child = parent; // Just a simple shallow clone will do
-	    return child;
-	  }
-	}
-	
-	/**
-	 * Simple flat clone using prototype, accepts only objects, usefull for property
-	 * override on FLAT configuration object (no nested props).
-	 *
-	 * USE WITH CAUTION! This may not behave as you wish if you do not know how this
-	 * works.
-	 */
-	clone.clonePrototype = function(parent) {
-	  if (parent === null)
-	    return null;
-	
-	  var c = function () {};
-	  c.prototype = parent;
-	  return new c();
-	};
-	
-
 }, '/lib/Extension.js': function(exports, module) {
 
 	/** node globals **/
@@ -464,9 +291,7 @@
 	/** code **/
 	// Generated by CoffeeScript 1.6.3
 	(function() {
-	  var Helpers, merge;
-	
-	  merge = require('recursive-merge');
+	  var Helpers;
 	
 	  Helpers = (function() {
 	    function Helpers() {}
@@ -513,6 +338,38 @@
 	      return -1;
 	    };
 	
+	    Helpers.clone = function(obj) {
+	      var key, result, value, _i, _len, _ref, _ref1, _type;
+	      _type = Object.prototype.toString;
+	      switch (_type.call(obj)) {
+	        case '[object Array]':
+	          result = [];
+	          for (key = _i = 0, _len = obj.length; _i < _len; key = ++_i) {
+	            value = obj[key];
+	            if ((_ref = _type.call(value)) === '[object Array]' || _ref === '[object Object]') {
+	              result[key] = Helpers.clone(value);
+	            } else {
+	              result[key] = value;
+	            }
+	          }
+	          break;
+	        case '[object Object]':
+	          result = {};
+	          for (key in obj) {
+	            value = obj[key];
+	            if ((_ref1 = _type.call(value)) === '[object Array]' || _ref1 === '[object Object]') {
+	              result[key] = Helpers.clone(value);
+	            } else {
+	              result[key] = value;
+	            }
+	          }
+	          break;
+	        default:
+	          return obj;
+	      }
+	      return result;
+	    };
+	
 	    return Helpers;
 	
 	  })();
@@ -536,11 +393,9 @@
 	/** code **/
 	// Generated by CoffeeScript 1.6.3
 	(function() {
-	  var EasyConfiguration, Extension, Helpers, clone, merge;
+	  var EasyConfiguration, Extension, Helpers, merge;
 	
 	  merge = require('recursive-merge');
-	
-	  clone = require('clone');
 	
 	  Extension = require('./Extension');
 	
@@ -611,7 +466,7 @@
 	    EasyConfiguration.prototype.loadConfig = function(file) {
 	      var data, include, path, _i, _len, _ref;
 	      data = require(file);
-	      data = clone(data, false);
+	      data = Helpers.clone(data, false);
 	      if (typeof data.includes !== 'undefined') {
 	        _ref = data.includes;
 	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -719,7 +574,7 @@
 	    };
 	
 	    EasyConfiguration.prototype.merge = function(left, right) {
-	      right = clone(right, false);
+	      right = Helpers.clone(right, false);
 	      return merge(left, right);
 	    };
 	
@@ -731,47 +586,6 @@
 	
 	}).call(this);
 	
-
-}, '/lib/shims.js': function(exports, module) {
-
-	/** node globals **/
-	var require = function(name) {return window.require(name, '/lib/shims.js');};
-	require.resolve = function(name, parent) {if (parent === null) {parent = '/lib/shims.js';} return window.require.resolve(name, parent);};
-	require.define = function(bundle) {window.require.define(bundle);};
-	require.cache = window.require.cache;
-	var __filename = '/lib/shims.js';
-	var __dirname = '/lib';
-	var process = {cwd: function() {return '/';}, argv: ['node', '/lib/shims.js'], env: {}};
-
-	/** code **/
-	if (!Array.prototype.indexOf) {
-		Array.prototype.indexOf = function (searchElement , fromIndex) {
-			var i,
-				pivot = (fromIndex) ? fromIndex : 0,
-				length;
-	
-			if (!this) {
-				throw new TypeError();
-			}
-	
-			length = this.length;
-	
-			if (length === 0 || pivot >= length) {
-				return -1;
-			}
-	
-			if (pivot < 0) {
-				pivot = length - Math.abs(pivot);
-			}
-	
-			for (i = pivot; i < length; i++) {
-				if (this[i] === searchElement) {
-					return i;
-				}
-			}
-			return -1;
-		};
-	}
 
 }, '/test/browser/tests/EasyConfiguration.coffee': function(exports, module) {
 
@@ -916,9 +730,11 @@
 
 	/** code **/
 	(function() {
-	  var Helpers;
+	  var Helpers, dir;
 	
 	  Helpers = require('/lib/Helpers');
+	
+	  dir = '/test/data';
 	
 	  describe('Helpers', function() {
 	    describe('#dirName()', function() {
@@ -926,9 +742,59 @@
 	        return expect(Helpers.dirName('/var/www/data/something.js')).to.be.equal('/var/www/data');
 	      });
 	    });
-	    return describe('#normalizePath()', function() {
+	    describe('#normalizePath()', function() {
 	      return it('should return normalized and resolved path', function() {
 	        return expect(Helpers.normalizePath('/var/www/../www/data/././../../www/data/something.js')).to.be.equal('/var/www/data/something.js');
+	      });
+	    });
+	    describe('#arrayIndexOf()', function() {
+	      it('should return index of needed item', function() {
+	        return expect(Helpers.arrayIndexOf(['one', 'two', 'three', 'four', 'five'], 'four')).to.be.equal(3);
+	      });
+	      return it('should return minus one for not found item', function() {
+	        return expect(Helpers.arrayIndexOf(['one'], 'two')).to.be.equal(-1);
+	      });
+	    });
+	    return describe('#clone()', function() {
+	      it('should clone array', function() {
+	        var cloned, original;
+	        original = ['one', 'two', 'three', 'four', 'five'];
+	        cloned = Helpers.clone(original);
+	        return expect(cloned).to.be.eql(['one', 'two', 'three', 'four', 'five']).and.not.equal(original);
+	      });
+	      it('should clone object', function() {
+	        var cloned, original;
+	        original = {
+	          one: 'one',
+	          two: 'two',
+	          three: 'three',
+	          four: 'four',
+	          five: 'five'
+	        };
+	        cloned = Helpers.clone(original);
+	        expect(cloned).to.be.eql({
+	          one: 'one',
+	          two: 'two',
+	          three: 'three',
+	          four: 'four',
+	          five: 'five'
+	        }).and.not.equal(original);
+	        original.three = 'test';
+	        return expect(cloned.three).to.be.equal('three');
+	      });
+	      return it('should clone advanced object', function() {
+	        var cloned, original;
+	        original = require("" + dir + "/advanced.json");
+	        cloned = Helpers.clone(original);
+	        expect(cloned).to.be.eql({
+	          includes: ['./config.json'],
+	          application: {
+	            path: '%base%',
+	            data: ['%paths.cdn%', '%paths.lang%', '%paths.translator%', '%paths.images%', '%paths.videos%']
+	          }
+	        }).and.not.equal(original);
+	        original.application.path = '/app';
+	        return expect(cloned.application.path).to.be.equal('%base%');
 	      });
 	    });
 	  });
@@ -1060,7 +926,7 @@
 	return {
 		"name": "easy-configuration",
 		"description": "Simply extensible loader for json config files",
-		"version": "1.6.0",
+		"version": "1.6.1",
 		"author": {
 			"name": "David Kudera",
 			"email": "sakren@gmail.com"
@@ -1083,8 +949,7 @@
 		},
 		"main": "./lib/EasyConfiguration.js",
 		"dependencies": {
-			"recursive-merge": "~1.0.0",
-			"clone": "~0.1.10"
+			"recursive-merge": "~1.0.0"
 		},
 		"devDependencies": {
 			"chai": "~1.8.0",
@@ -1153,117 +1018,10 @@
 	}).call(this);
 	
 
-}, 'clone/package.json': function(exports, module) {
-
-	/** node globals **/
-	var require = function(name) {return window.require(name, 'clone/package.json');};
-	require.resolve = function(name, parent) {if (parent === null) {parent = 'clone/package.json';} return window.require.resolve(name, parent);};
-	require.define = function(bundle) {window.require.define(bundle);};
-	require.cache = window.require.cache;
-	var __filename = 'clone/package.json';
-	var __dirname = 'clone';
-	var process = {cwd: function() {return '/';}, argv: ['node', 'clone/package.json'], env: {}};
-
-	/** code **/
-	module.exports = (function() {
-	return {
-	  "name": "clone",
-	  "description": "deep cloning of objects and arrays",
-	  "tags": [
-	    "clone",
-	    "object",
-	    "array",
-	    "function",
-	    "date"
-	  ],
-	  "version": "0.1.11",
-	  "repository": {
-	    "type": "git",
-	    "url": "git://github.com/pvorb/node-clone.git"
-	  },
-	  "bugs": {
-	    "url": "https://github.com/pvorb/node-clone/issues"
-	  },
-	  "main": "clone.js",
-	  "author": {
-	    "name": "Paul Vorbach",
-	    "email": "paul@vorb.de",
-	    "url": "http://vorb.de"
-	  },
-	  "contributors": [
-	    {
-	      "name": "Blake Miner",
-	      "email": "miner.blake@gmail.com",
-	      "url": "http://www.blakeminer.com/"
-	    },
-	    {
-	      "name": "Tian You",
-	      "email": "axqd001@gmail.com",
-	      "url": "http://blog.axqd.net/"
-	    },
-	    {
-	      "name": "George Stagas",
-	      "email": "gstagas@gmail.com",
-	      "url": "http://stagas.com/"
-	    },
-	    {
-	      "name": "Tobiasz Cudnik",
-	      "email": "tobiasz.cudnik@gmail.com",
-	      "url": "https://github.com/TobiaszCudnik"
-	    },
-	    {
-	      "name": "Pavel Lang",
-	      "email": "langpavel@phpskelet.org",
-	      "url": "https://github.com/langpavel"
-	    },
-	    {
-	      "name": "Dan MacTough",
-	      "url": "http://yabfog.com/"
-	    },
-	    {
-	      "name": "w1nk",
-	      "url": "https://github.com/w1nk"
-	    },
-	    {
-	      "name": "Hugh Kennedy",
-	      "url": "http://twitter.com/hughskennedy"
-	    },
-	    {
-	      "name": "Dustin Diaz",
-	      "url": "http://dustindiaz.com"
-	    },
-	    {
-	      "name": "Ilya Shaisultanov",
-	      "url": "https://github.com/diversario"
-	    }
-	  ],
-	  "engines": {
-	    "node": "*"
-	  },
-	  "dependencies": {},
-	  "devDependencies": {
-	    "underscore": "*",
-	    "nodeunit": "*"
-	  },
-	  "optionalDependencies": {},
-	  "scripts": {
-	    "test": "nodeunit test.js"
-	  },
-	  "readme": "# clone\n\n[![build status](https://secure.travis-ci.org/pvorb/node-clone.png)](http://travis-ci.org/pvorb/node-clone)\n\noffers foolproof _deep cloning_ of variables in JavaScript.\n\n\n## Installation\n\n    npm install clone\n\nor\n\n    ender build clone\n\n\n## Example\n\n~~~ javascript\nvar clone = require('clone');\n\nvar a, b;\n\na = { foo: { bar: 'baz' } };  // inital value of a\n\nb = clone(a);                 // clone a -> b\na.foo.bar = 'foo';            // change a\n\nconsole.log(a);               // show a\nconsole.log(b);               // show b\n~~~\n\nThis will print:\n\n~~~ javascript\n{ foo: { bar: 'foo' } }\n{ foo: { bar: 'baz' } }\n~~~\n\n**clone** masters cloning simple objects (even with custom prototype), arrays,\nDate objects, and RegExp objects. Everything is cloned recursively, so that you\ncan clone dates in arrays in objects, for example.\n\n\n## API\n\n`clone(val, circular)`\n\n  * `val` -- the value that you want to clone, any type allowed\n  * `circular` -- boolean\n\n    Call `clone` with `circular` set to `false` if you are certain that `obj`\n    contains no circular references. This will give better performance if needed.\n    There is no error if `undefined` or `null` is passed as `obj`.\n\n`clone.clonePrototype(obj)`\n\n  * `obj` -- the object that you want to clone\n\nDoes a prototype clone as\n[described by Oran Looney](http://oranlooney.com/functional-javascript/).\n\n\n## Circular References\n\n~~~ javascript\nvar a, b;\n\na = { hello: 'world' };\n\na.myself = a;\nb = clone(a);\n\nconsole.log(b);\n~~~\n\nThis will print:\n\n~~~ javascript\n{ hello: \"world\", myself: [Circular] }\n~~~\n\nSo, `b.myself` points to `b`, not `a`. Neat!\n\n\n## Test\n\n    npm test\n\n\n## Caveat\n\nSome special objects like a socket or `process.stdout`/`stderr` are known to not\nbe cloneable. If you find other objects that cannot be cloned, please [open an\nissue](https://github.com/pvorb/node-clone/issues/new).\n\n\n## Bugs and Issues\n\nIf you encounter any bugs or issues, feel free to\n[open an issue at github](https://github.com/pvorb/node-clone/issues) or send me\nan email to <paul@vorb.de>. I also always like to hear from you, if you’re using\nmy code.\n\n## License\n\nCopyright © 2011-2013 Paul Vorbach\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of\nthis software and associated documentation files (the “Software”), to deal in\nthe Software without restriction, including without limitation the rights to\nuse, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of\nthe Software, and to permit persons to whom the Software is furnished to do so,\nsubject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS\nFOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR\nCOPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER\nIN AN ACTION OF CONTRACT, TORT OR OTHERWISE, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n",
-	  "readmeFilename": "README.md",
-	  "homepage": "https://github.com/pvorb/node-clone",
-	  "_id": "clone@0.1.11",
-	  "_from": "clone@~0.1.10"
-	}
-	
-	}).call(this);
-	
-
 }, 'recursive-merge': function(exports, module) { module.exports = window.require('recursive-merge/lib/Merge.js'); }
-, 'clone': function(exports, module) { module.exports = window.require('clone/clone.js'); }
 
 });
-require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1385285416000,"mtime":1375346181000,"ctime":1385285362000},"clone/clone.js":{"atime":1385285415000,"mtime":1381937894000,"ctime":1385285362000},"/lib/Extension.js":{"atime":1385285413000,"mtime":1385285378000,"ctime":1385285378000},"/lib/Helpers.js":{"atime":1385287074000,"mtime":1385287073000,"ctime":1385287073000},"/lib/EasyConfiguration.js":{"atime":1385287034000,"mtime":1385287027000,"ctime":1385287027000},"/lib/shims.js":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1385286543000,"mtime":1385286541000,"ctime":1385286541000},"/test/browser/tests/Helpers.coffee":{"atime":1385286296000,"mtime":1385286075000,"ctime":1385286075000},"/test/data/advanced.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/config.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/other.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/unknownSection.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/package.json":{"atime":1385287049000,"mtime":1385287044000,"ctime":1385287044000},"recursive-merge/package.json":{"atime":1385285416000,"mtime":1385285362000,"ctime":1385285362000},"clone/package.json":{"atime":1385285415000,"mtime":1385285362000,"ctime":1385285362000}});
+require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1385285416000,"mtime":1375346181000,"ctime":1385285362000},"/lib/Extension.js":{"atime":1385299545000,"mtime":1385299528000,"ctime":1385299528000},"/lib/Helpers.js":{"atime":1385300268000,"mtime":1385300070000,"ctime":1385300070000},"/lib/EasyConfiguration.js":{"atime":1385302067000,"mtime":1385302046000,"ctime":1385302046000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1385286543000,"mtime":1385286541000,"ctime":1385286541000},"/test/browser/tests/Helpers.coffee":{"atime":1385301964000,"mtime":1385301962000,"ctime":1385301962000},"/test/data/advanced.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/config.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/other.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/unknownSection.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/package.json":{"atime":1385302108000,"mtime":1385302079000,"ctime":1385302079000},"recursive-merge/package.json":{"atime":1385285416000,"mtime":1385285362000,"ctime":1385285362000}});
 require.version = '5.1.2';
 
 /** run section **/

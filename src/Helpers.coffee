@@ -1,5 +1,3 @@
-merge = require 'recursive-merge'
-
 class Helpers
 
 
@@ -39,6 +37,30 @@ class Helpers
 				return i
 
 		return -1
+
+
+	@clone: (obj) ->
+		_type = Object.prototype.toString
+
+		switch _type.call(obj)
+			when '[object Array]'
+				result = []
+				for value, key in obj
+					if _type.call(value) in ['[object Array]', '[object Object]']
+						result[key] = Helpers.clone(value)
+					else
+						result[key] = value
+			when '[object Object]'
+				result = {}
+				for key, value of obj
+					if _type.call(value) in ['[object Array]', '[object Object]']
+						result[key] = Helpers.clone(value)
+					else
+						result[key] = value
+			else
+				return obj
+
+		return result
 
 
 module.exports = Helpers

@@ -200,6 +200,9 @@ $ npm test
 
 ## Changelog
 
+* 1.6.1
+	+ Removed dependency on clone module
+
 * 1.6.0
 	+ Added many tests + tests for browser
 	+ Updated docs
