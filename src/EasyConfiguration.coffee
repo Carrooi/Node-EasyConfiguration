@@ -1,5 +1,3 @@
-shims = require './shims'
-
 merge = require 'recursive-merge'
 clone = require 'clone'
 
@@ -36,7 +34,7 @@ class EasyConfiguration
 
 
 	addExtension: (name, extension) ->
-		if @reserved.indexOf(name) != -1
+		if Helpers.arrayIndexOf(@reserved, name) != -1
 			throw new Error 'Extension\'s name ' + name + ' is reserved.'
 
 		extension.configurator = @

@@ -27,4 +27,18 @@ class Helpers
 		return '/' + result.join('/')
 
 
+	@arrayIndexOf: (array, search) ->
+		if typeof Array.prototype.indexOf != 'undefined'
+			return array.indexOf(search)
+
+		if array.length == 0
+			return -1
+
+		for element, i in array
+			if element == search
+				return i
+
+		return -1
+
+
 module.exports = Helpers
