@@ -1,7 +1,7 @@
 EasyConfiguration = require '/lib/EasyConfiguration'
 Extension = require '/lib/Extension'
 
-#dir =
+dir = '/test/data'
 
 configuration = null
 

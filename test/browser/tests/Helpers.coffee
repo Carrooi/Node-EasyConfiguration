@@ -1,6 +1,4 @@
-expect = require('chai').expect
-
-Helpers = require '../../lib/Helpers'
+Helpers = require '/lib/Helpers'
 
 
 describe 'Helpers', ->
@@ -11,6 +9,5 @@ describe 'Helpers', ->
 			expect(Helpers.dirName('/var/www/data/something.js')).to.be.equal('/var/www/data')
 
 	describe '#normalizePath()', ->
-
 		it 'should return normalized and resolved path', ->
 			expect(Helpers.normalizePath('/var/www/../www/data/././../../www/data/something.js')).to.be.equal('/var/www/data/something.js')

@@ -201,7 +201,7 @@ $ npm test
 ## Changelog
 
 * 1.6.0
-	+ Added many tests
+	+ Added many tests + tests for browser
 	+ Updated docs
 	+ Rewritten parameters parsing (now much better)
 

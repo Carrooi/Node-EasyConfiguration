@@ -1,14 +1,16 @@
 {
 	"packages": {
 		"modal": {
-			"base": "../",
-			"application": "./test/application.js",
+			"base": "../../",
+			"application": "./test/browser/application.js",
 			"modules": [
 				"./lib/*.js",
-				"./test/tests/*.coffee"
+				"./test/browser/tests/*.coffee",
+				"./test/data/*.json"
 			],
 			"run": [
-				"/test/tests/EasyConfiguration.coffee"
+				"/test/browser/tests/EasyConfiguration.coffee",
+				"/test/browser/tests/Helpers.coffee"
 			]
 		}
 	}

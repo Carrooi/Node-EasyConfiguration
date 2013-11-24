@@ -32,6 +32,6 @@
 		"mocha": "~1.14.0"
 	},
 	"scripts": {
-		"test": "cd ./test; mocha ./node/index.js --reporter spec;"
+		"test": "cd ./test; echo \"Testing in node:\"; mocha ./node/index.js --reporter spec; cd ./browser; echo \"Testing in browser:\"; mocha-phantomjs ./index.html;"
 	}
 }
