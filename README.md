@@ -200,6 +200,9 @@ $ npm test
 
 ## Changelog
 
+* 1.6.2
+	+ Throwing error if there is some circular reference
+
 * 1.6.1
 	+ Removed dependency on clone module
 

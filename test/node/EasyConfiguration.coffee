@@ -19,6 +19,10 @@ describe 'EasyConfiguration', ->
 		it 'should return loaded configuration without parameters', ->
 			expect(configuration.load()).to.be.eql({})
 
+		it 'should throw an error with information about circular reference', ->
+			configuration = new EasyConfiguration("#{dir}/circular.json")
+			expect( -> configuration.load()).to.throw(Error, 'Found circular reference in parameters first, second, third, other.inner.fourth.')
+
 	describe '#addSection()', ->
 
 		it 'should return instance of newly registered section', ->

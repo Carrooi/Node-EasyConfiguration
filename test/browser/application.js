@@ -402,6 +402,8 @@
 	  Helpers = require('./Helpers');
 	
 	  EasyConfiguration = (function() {
+	    EasyConfiguration.PARAMETER_REGEXP = /%([a-zA-Z.-_]+)%/g;
+	
 	    EasyConfiguration.prototype.fileName = null;
 	
 	    EasyConfiguration.prototype.reserved = ['includes', 'parameters'];
@@ -529,8 +531,8 @@
 	      parse = function(name, param) {
 	        switch (_type.call(param)) {
 	          case '[object String]':
-	            return parameters[name] = param.replace(/%([a-zA-Z.-_]+)%/g, function(match, variable) {
-	              return _this.getParameter(variable);
+	            return parameters[name] = param.replace(EasyConfiguration.PARAMETER_REGEXP, function(match, variable) {
+	              return _this._getParameter(variable, [name]);
 	            });
 	          case '[object Object]':
 	          case '[object Array]':
@@ -559,8 +561,12 @@
 	      return parameters;
 	    };
 	
-	    EasyConfiguration.prototype.getParameter = function(parameter) {
-	      var actual, part, parts, _i, _len;
+	    EasyConfiguration.prototype._getParameter = function(parameter, previous) {
+	      var actual, part, parts, s, _i, _len,
+	        _this = this;
+	      if (previous == null) {
+	        previous = [];
+	      }
 	      parts = parameter.split('.');
 	      actual = this._parameters;
 	      for (_i = 0, _len = parts.length; _i < _len; _i++) {
@@ -570,7 +576,20 @@
 	        }
 	        actual = actual[part];
 	      }
+	      if (Helpers.arrayIndexOf(previous, parameter) !== -1) {
+	        s = previous.length === 1 ? '' : 's';
+	        previous = previous.join(', ');
+	        throw new Error("Found circular reference in parameter" + s + " " + previous + ".");
+	      }
+	      previous.push(parameter);
+	      actual = actual.replace(EasyConfiguration.PARAMETER_REGEXP, function(match, param) {
+	        return _this._getParameter(param, previous);
+	      });
 	      return actual;
+	    };
+	
+	    EasyConfiguration.prototype.getParameter = function(parameter) {
+	      return this._getParameter(parameter);
 	    };
 	
 	    EasyConfiguration.prototype.merge = function(left, right) {
@@ -615,8 +634,14 @@
 	      return configuration = new EasyConfiguration("" + dir + "/config.json");
 	    });
 	    describe('#load()', function() {
-	      return it('should return loaded configuration without parameters', function() {
+	      it('should return loaded configuration without parameters', function() {
 	        return expect(configuration.load()).to.be.eql({});
+	      });
+	      return it('should throw an error with information about circular reference', function() {
+	        configuration = new EasyConfiguration("" + dir + "/circular.json");
+	        return expect(function() {
+	          return configuration.load();
+	        }).to["throw"](Error, 'Found circular reference in parameters first, second, third, other.inner.fourth.');
 	      });
 	    });
 	    describe('#addSection()', function() {
@@ -833,6 +858,34 @@
 	}).call(this);
 	
 
+}, '/test/data/circular.json': function(exports, module) {
+
+	/** node globals **/
+	var require = function(name) {return window.require(name, '/test/data/circular.json');};
+	require.resolve = function(name, parent) {if (parent === null) {parent = '/test/data/circular.json';} return window.require.resolve(name, parent);};
+	require.define = function(bundle) {window.require.define(bundle);};
+	require.cache = window.require.cache;
+	var __filename = '/test/data/circular.json';
+	var __dirname = '/test/data';
+	var process = {cwd: function() {return '/';}, argv: ['node', '/test/data/circular.json'], env: {}};
+
+	/** code **/
+	module.exports = (function() {
+	return {
+		"parameters": {
+			"first": "%second%",
+			"second": "%third%",
+			"third": "%other.inner.fourth%",
+			"other": {
+				"inner": {
+					"fourth": "%first%"
+				}
+			}
+		}
+	}
+	}).call(this);
+	
+
 }, '/test/data/config.json': function(exports, module) {
 
 	/** node globals **/
@@ -1021,7 +1074,7 @@
 }, 'recursive-merge': function(exports, module) { module.exports = window.require('recursive-merge/lib/Merge.js'); }
 
 });
-require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1385285416000,"mtime":1375346181000,"ctime":1385285362000},"/lib/Extension.js":{"atime":1385299545000,"mtime":1385299528000,"ctime":1385299528000},"/lib/Helpers.js":{"atime":1385300268000,"mtime":1385300070000,"ctime":1385300070000},"/lib/EasyConfiguration.js":{"atime":1385302067000,"mtime":1385302046000,"ctime":1385302046000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1385286543000,"mtime":1385286541000,"ctime":1385286541000},"/test/browser/tests/Helpers.coffee":{"atime":1385301964000,"mtime":1385301962000,"ctime":1385301962000},"/test/data/advanced.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/config.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/other.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/unknownSection.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/package.json":{"atime":1385302108000,"mtime":1385302079000,"ctime":1385302079000},"recursive-merge/package.json":{"atime":1385285416000,"mtime":1385285362000,"ctime":1385285362000}});
+require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1385285416000,"mtime":1375346181000,"ctime":1385285362000},"/lib/Extension.js":{"atime":1385299545000,"mtime":1385299528000,"ctime":1385299528000},"/lib/Helpers.js":{"atime":1385300268000,"mtime":1385300070000,"ctime":1385300070000},"/lib/EasyConfiguration.js":{"atime":1385308594000,"mtime":1385308588000,"ctime":1385308588000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1385308830000,"mtime":1385308821000,"ctime":1385308821000},"/test/browser/tests/Helpers.coffee":{"atime":1385301964000,"mtime":1385301962000,"ctime":1385301962000},"/test/data/advanced.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/circular.json":{"atime":1385308755000,"mtime":1385308754000,"ctime":1385308754000},"/test/data/config.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/other.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/unknownSection.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/package.json":{"atime":1385308830000,"mtime":1385308828000,"ctime":1385308828000},"recursive-merge/package.json":{"atime":1385285416000,"mtime":1385285362000,"ctime":1385285362000}});
 require.version = '5.1.2';
 
 /** run section **/

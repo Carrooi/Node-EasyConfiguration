@@ -19,8 +19,14 @@
       return configuration = new EasyConfiguration("" + dir + "/config.json");
     });
     describe('#load()', function() {
-      return it('should return loaded configuration without parameters', function() {
+      it('should return loaded configuration without parameters', function() {
         return expect(configuration.load()).to.be.eql({});
+      });
+      return it('should throw an error with information about circular reference', function() {
+        configuration = new EasyConfiguration("" + dir + "/circular.json");
+        return expect(function() {
+          return configuration.load();
+        }).to["throw"](Error, 'Found circular reference in parameters first, second, third, other.inner.fourth.');
       });
     });
     describe('#addSection()', function() {

@@ -6,6 +6,9 @@ Helpers = require './Helpers'
 class EasyConfiguration
 
 
+	@PARAMETER_REGEXP: /%([a-zA-Z.-_]+)%/g
+
+
 	fileName: null
 
 	reserved: ['includes', 'parameters']
@@ -122,8 +125,8 @@ class EasyConfiguration
 		parse = (name, param) =>
 			switch _type.call(param)
 				when '[object String]'
-					parameters[name] = param.replace(/%([a-zA-Z.-_]+)%/g, (match, variable) =>
-						return @getParameter(variable)
+					parameters[name] = param.replace(EasyConfiguration.PARAMETER_REGEXP, (match, variable) =>
+						return @_getParameter(variable, [name])
 					)
 				when '[object Object]', '[object Array]'
 					parameters[name] = @expandParameters(param)
@@ -141,11 +144,10 @@ class EasyConfiguration
 			else
 				throw new Error "Can not parse #{type} parameters."
 
-
 		return parameters
 
 
-	getParameter: (parameter) ->
+	_getParameter: (parameter, previous = []) ->
 		parts = parameter.split('.')
 		actual = @_parameters
 		for part in parts
@@ -154,7 +156,22 @@ class EasyConfiguration
 
 			actual = actual[part]
 
+		if Helpers.arrayIndexOf(previous, parameter) != -1
+			s = if previous.length == 1 then '' else 's'
+			previous = previous.join(', ')
+			throw new Error "Found circular reference in parameter#{s} #{previous}."
+
+		previous.push(parameter)
+
+		actual = actual.replace(EasyConfiguration.PARAMETER_REGEXP, (match, param) =>
+			return @_getParameter(param, previous)
+		)
+
 		return actual
+
+
+	getParameter: (parameter) ->
+		return @_getParameter(parameter)
 
 
 	merge: (left, right) ->

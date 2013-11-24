@@ -1,0 +1,12 @@
+{
+	"parameters": {
+		"first": "%second%",
+		"second": "%third%",
+		"third": "%other.inner.fourth%",
+		"other": {
+			"inner": {
+				"fourth": "%first%"
+			}
+		}
+	}
+}
