@@ -346,7 +346,7 @@
 	          result = [];
 	          for (key = _i = 0, _len = obj.length; _i < _len; key = ++_i) {
 	            value = obj[key];
-	            if ((_ref = _type.call(value)) === '[object Array]' || _ref === '[object Object]') {
+	            if (value !== null && ((_ref = _type.call(value)) === '[object Array]' || _ref === '[object Object]')) {
 	              result[key] = Helpers.clone(value);
 	            } else {
 	              result[key] = value;
@@ -357,7 +357,7 @@
 	          result = {};
 	          for (key in obj) {
 	            value = obj[key];
-	            if ((_ref1 = _type.call(value)) === '[object Array]' || _ref1 === '[object Object]') {
+	            if (value !== null && ((_ref1 = _type.call(value)) === '[object Array]' || _ref1 === '[object Object]')) {
 	              result[key] = Helpers.clone(value);
 	            } else {
 	              result[key] = value;
@@ -704,6 +704,7 @@
 	          config = this.getConfig({
 	            data: [],
 	            run: true,
+	            favicon: null,
 	            cache: '%base%/temp/cache'
 	          });
 	          _ref = config.data;
@@ -732,6 +733,7 @@
 	              }
 	            ],
 	            run: true,
+	            favicon: null,
 	            cache: './www/temp/cache'
 	          }
 	        });
@@ -979,7 +981,7 @@
 	return {
 		"name": "easy-configuration",
 		"description": "Simply extensible loader for json config files",
-		"version": "1.6.1",
+		"version": "1.6.2",
 		"author": {
 			"name": "David Kudera",
 			"email": "sakren@gmail.com"
@@ -1074,7 +1076,7 @@
 }, 'recursive-merge': function(exports, module) { module.exports = window.require('recursive-merge/lib/Merge.js'); }
 
 });
-require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1385285416000,"mtime":1375346181000,"ctime":1385285362000},"/lib/Extension.js":{"atime":1385299545000,"mtime":1385299528000,"ctime":1385299528000},"/lib/Helpers.js":{"atime":1385300268000,"mtime":1385300070000,"ctime":1385300070000},"/lib/EasyConfiguration.js":{"atime":1385308594000,"mtime":1385308588000,"ctime":1385308588000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1385308830000,"mtime":1385308821000,"ctime":1385308821000},"/test/browser/tests/Helpers.coffee":{"atime":1385301964000,"mtime":1385301962000,"ctime":1385301962000},"/test/data/advanced.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/circular.json":{"atime":1385308755000,"mtime":1385308754000,"ctime":1385308754000},"/test/data/config.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/other.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/unknownSection.json":{"atime":1385285413000,"mtime":1385285347000,"ctime":1385285347000},"/package.json":{"atime":1385308830000,"mtime":1385308828000,"ctime":1385308828000},"recursive-merge/package.json":{"atime":1385285416000,"mtime":1385285362000,"ctime":1385285362000}});
+require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1385385635000,"mtime":1375346181000,"ctime":1385285362000},"/lib/Extension.js":{"atime":1385385626000,"mtime":1385385610000,"ctime":1385385610000},"/lib/Helpers.js":{"atime":1385385753000,"mtime":1385385750000,"ctime":1385385750000},"/lib/EasyConfiguration.js":{"atime":1385385626000,"mtime":1385385610000,"ctime":1385385610000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1385385683000,"mtime":1385385677000,"ctime":1385385677000},"/test/browser/tests/Helpers.coffee":{"atime":1385301964000,"mtime":1385301962000,"ctime":1385301962000},"/test/data/advanced.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/circular.json":{"atime":1385308755000,"mtime":1385308754000,"ctime":1385308754000},"/test/data/config.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/other.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/unknownSection.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/package.json":{"atime":1385385634000,"mtime":1385385631000,"ctime":1385385631000},"recursive-merge/package.json":{"atime":1385385635000,"mtime":1385285362000,"ctime":1385285362000}});
 require.version = '5.1.2';
 
 /** run section **/

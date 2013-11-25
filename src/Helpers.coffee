@@ -46,14 +46,14 @@ class Helpers
 			when '[object Array]'
 				result = []
 				for value, key in obj
-					if _type.call(value) in ['[object Array]', '[object Object]']
+					if value != null && _type.call(value) in ['[object Array]', '[object Object]']
 						result[key] = Helpers.clone(value)
 					else
 						result[key] = value
 			when '[object Object]'
 				result = {}
 				for key, value of obj
-					if _type.call(value) in ['[object Array]', '[object Object]']
+					if value != null &&  _type.call(value) in ['[object Array]', '[object Object]']
 						result[key] = Helpers.clone(value)
 					else
 						result[key] = value

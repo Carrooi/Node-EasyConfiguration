@@ -200,6 +200,9 @@ $ npm test
 
 ## Changelog
 
+* 1.6.3
+	+ Bug in IE8
+
 * 1.6.2
 	+ Throwing error if there is some circular reference
 

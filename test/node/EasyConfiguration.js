@@ -89,6 +89,7 @@
           config = this.getConfig({
             data: [],
             run: true,
+            favicon: null,
             cache: '%base%/temp/cache'
           });
           _ref = config.data;
@@ -117,6 +118,7 @@
               }
             ],
             run: true,
+            favicon: null,
             cache: './www/temp/cache'
           }
         });

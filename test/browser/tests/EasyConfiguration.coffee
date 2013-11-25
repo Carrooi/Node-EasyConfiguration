@@ -81,6 +81,7 @@ describe 'EasyConfiguration', ->
 				config = @getConfig(
 					data: []
 					run: true
+					favicon: null
 					cache: '%base%/temp/cache'
 				)
 				for _path, i in config.data
@@ -98,5 +99,6 @@ describe 'EasyConfiguration', ->
 						{path: './www/videos'}
 					]
 					run: true
+					favicon: null
 					cache: './www/temp/cache'
 			)
