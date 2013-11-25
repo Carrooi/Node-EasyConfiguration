@@ -200,7 +200,7 @@ $ npm test
 
 ## Changelog
 
-* 1.6.3 - 1.6.4
+* 1.6.3 - 1.6.5
 	+ Bugs in IE8
 
 * 1.6.2

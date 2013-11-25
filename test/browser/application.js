@@ -180,14 +180,14 @@
 	    leftType = type.call(left);
 	    rightType = type.call(right);
 	    if (leftType !== rightType) {
-	      throw new Error('Can not merge ' + leftType + ' with ' + rightType);
+	      throw new Error('Can not merge ' + leftType + ' with ' + rightType + '.');
 	    }
 	    switch (leftType) {
 	      case '[object Array]':
 	        for (i = _i = 0, _len = right.length; _i < _len; i = ++_i) {
 	          value = right[i];
 	          valueType = type.call(value);
-	          if (valueType === '[object Array]' || valueType === '[object Object]') {
+	          if ((valueType === '[object Array]' || valueType === '[object Object]') && value !== null) {
 	            left[i] = merge(left[i], value);
 	          } else {
 	            left.push(value);
@@ -197,16 +197,18 @@
 	      case '[object Object]':
 	        for (name in right) {
 	          value = right[name];
-	          valueType = type.call(value);
-	          if (typeof left[name] === 'undefined') {
-	            left[name] = value;
-	          } else if (valueType === '[object Array]' || valueType === '[object Object]') {
-	            left[name] = merge(left[name], value);
+	          if (right.hasOwnProperty(name) && (name !== '__proto__')) {
+	            valueType = type.call(value);
+	            if (typeof left[name] === 'undefined' || left[name] === null) {
+	              left[name] = value;
+	            } else if (valueType === '[object Array]' || valueType === '[object Object]') {
+	              left[name] = merge(left[name], value);
+	            }
 	          }
 	        }
 	        break;
 	      default:
-	        throw new Error('Can not merge ' + leftType + ' objects');
+	        throw new Error('Can not merge ' + leftType + ' objects.');
 	    }
 	    return left;
 	  };
@@ -981,7 +983,7 @@
 	return {
 		"name": "easy-configuration",
 		"description": "Simply extensible loader for json config files",
-		"version": "1.6.4",
+		"version": "1.6.5",
 		"author": {
 			"name": "David Kudera",
 			"email": "sakren@gmail.com"
@@ -1004,7 +1006,7 @@
 		},
 		"main": "./lib/EasyConfiguration.js",
 		"dependencies": {
-			"recursive-merge": "~1.1.2"
+			"recursive-merge": "~1.1.3"
 		},
 		"devDependencies": {
 			"chai": "~1.8.0",
@@ -1033,7 +1035,7 @@
 	return {
 	  "name": "recursive-merge",
 	  "description": "Recursive merge tool for arrays and objects",
-	  "version": "1.0.0",
+	  "version": "1.1.3",
 	  "author": {
 	    "name": "David Kudera",
 	    "email": "sakren@gmail.com"
@@ -1055,19 +1057,21 @@
 	  },
 	  "main": "./lib/Merge.js",
 	  "devDependencies": {
-	    "should": "1.2.2"
+	    "should": "~1.2.2",
+	    "chai": "~1.8.1",
+	    "mocha": "~1.14.0"
 	  },
 	  "scripts": {
-	    "test": "cd ./test; mocha ./index.js;"
+	    "test": "cd ./test; echo \"Testing in node:\"; mocha ./node/index.js --reporter spec; cd ./browser; echo \"Testing in browser:\"; mocha-phantomjs ./index.html;"
 	  },
-	  "readme": "# Recursive merge\n\nRecursive merge tool for arrays and objects\n\n## Changelog\n\nChangelog is in the bottom of this readme.\n\n## Usage\n\nWith this tool, you can recursivelly merge arrays or objects.\n\n```\nvar merge = require('merge');\n\nvar result = merge(\n\t[1, 1, 2, 3],\n\t[3, 4, 4, 5],\n\t[10, 9, 8, 1]\n);\t\t\t\t// result: [1, 1, 2, 3, 3, 4, 4, 5, 10, 9, 8, 1]\n```\n\nAs you can see, this library just merging objects and not removing duplicates.\n\nYou should also know, that this affects first object passed to merge function. Overy other objects (arrays, objects) are\nadded to the first one. There is not any fast simple and universal solution for cloning objects (arrays yes).\n\nIn the same way, you can merge also objects.\n\nIf you will try to merge two different types of objects, exception will be thrown. Also if you will try to merge other\nobjects than arrays or objects, exception will be also thrown.\n\n## Changelog\n\n* 1.0.0\n\t+ Initial first version",
+	  "readme": "# Recursive merge\n\nRecursive merge tool for arrays and objects.\n\n## Installation\n\n```\n$ npm install recursive-merge\n```\n\n## Usage\n\nWith this tool, you can recursively merge arrays or objects.\n\n```\nvar merge = require('merge');\n\nvar result = merge(\n\t[1, 1, 2, 3],\n\t[3, 4, 4, 5],\n\t[10, 9, 8, 1]\n);\t\t\t\t// result: [1, 1, 2, 3, 3, 4, 4, 5, 10, 9, 8, 1]\n```\n\nAs you can see, this library just merging objects and not removing duplicates.\n\nYou should also know, that this affects first object passed to merge function. Every other objects (arrays, objects) are\nadded to the first one. There is not any fast simple and universal solution for cloning objects (arrays yes).\n\nIn the same way, you can merge also objects.\n\nIf you will try to merge two different types of objects, exception will be thrown. Also if you will try to merge other\nobjects than arrays or objects, exception will be also thrown.\n\n## Tests\n\n```\n$ npm test\n```\n\n## Changelog\n\n* 1.1.2 - 1.1.3\n\t+ Bugs in IE8\n\n* 1.1.0 - 1.1.1\n\t+ Rewritten tests\n\t+ Using chai for assertion (not should)\n\t+ Added some tests\n\t+ Added tests for browser\n\n* 1.0.0\n\t+ Initial first version",
 	  "readmeFilename": "README.md",
 	  "bugs": {
 	    "url": "https://github.com/sakren/node-recursive-merge/issues"
 	  },
 	  "homepage": "https://github.com/sakren/node-recursive-merge",
-	  "_id": "recursive-merge@1.0.0",
-	  "_from": "recursive-merge@~1.0.0"
+	  "_id": "recursive-merge@1.1.3",
+	  "_from": "recursive-merge@~1.1.3"
 	}
 	
 	}).call(this);
@@ -1076,7 +1080,7 @@
 }, 'recursive-merge': function(exports, module) { module.exports = window.require('recursive-merge/lib/Merge.js'); }
 
 });
-require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1385385635000,"mtime":1375346181000,"ctime":1385285362000},"/lib/Extension.js":{"atime":1385388163000,"mtime":1385388139000,"ctime":1385388139000},"/lib/Helpers.js":{"atime":1385388163000,"mtime":1385388139000,"ctime":1385388139000},"/lib/EasyConfiguration.js":{"atime":1385388163000,"mtime":1385388139000,"ctime":1385388139000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1385385683000,"mtime":1385385677000,"ctime":1385385677000},"/test/browser/tests/Helpers.coffee":{"atime":1385301964000,"mtime":1385301962000,"ctime":1385301962000},"/test/data/advanced.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/circular.json":{"atime":1385308755000,"mtime":1385308754000,"ctime":1385308754000},"/test/data/config.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/other.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/unknownSection.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/package.json":{"atime":1385388171000,"mtime":1385388166000,"ctime":1385388166000},"recursive-merge/package.json":{"atime":1385385635000,"mtime":1385285362000,"ctime":1385285362000}});
+require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1385388668000,"mtime":1385388458000,"ctime":1385388613000},"/lib/Extension.js":{"atime":1385388668000,"mtime":1385388653000,"ctime":1385388653000},"/lib/Helpers.js":{"atime":1385388668000,"mtime":1385388653000,"ctime":1385388653000},"/lib/EasyConfiguration.js":{"atime":1385388668000,"mtime":1385388653000,"ctime":1385388653000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1385385683000,"mtime":1385385677000,"ctime":1385385677000},"/test/browser/tests/Helpers.coffee":{"atime":1385388669000,"mtime":1385301962000,"ctime":1385301962000},"/test/data/advanced.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/circular.json":{"atime":1385308755000,"mtime":1385308754000,"ctime":1385308754000},"/test/data/config.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/other.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/test/data/unknownSection.json":{"atime":1385385635000,"mtime":1385285347000,"ctime":1385285347000},"/package.json":{"atime":1385388668000,"mtime":1385388625000,"ctime":1385388625000},"recursive-merge/package.json":{"atime":1385388616000,"mtime":1385388613000,"ctime":1385388613000}});
 require.version = '5.1.2';
 
 /** run section **/
