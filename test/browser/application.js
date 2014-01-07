@@ -527,6 +527,11 @@
 	    function EasyConfiguration(fileName) {
 	      var stack;
 	      this.fileName = fileName;
+	      this.reserved = ['includes', 'parameters', 'common'];
+	      this.extensions = {};
+	      this.files = [];
+	      this._parameters = {};
+	      this.parameters = {};
 	      if (this.fileName[0] === '.' && isWindow) {
 	        throw new Error('Relative paths to config files are not supported in browser.');
 	      }
@@ -534,11 +539,6 @@
 	        stack = callsite();
 	        this.fileName = path.join(path.dirname(stack[1].getFileName()), this.fileName);
 	      }
-	      this.reserved = ['includes', 'parameters', 'common'];
-	      this.extensions = {};
-	      this.files = [];
-	      this._parameters = {};
-	      this.parameters = {};
 	    }
 	
 	    EasyConfiguration.prototype.getEnvironment = function() {
@@ -1390,7 +1390,7 @@
 , 'callsite': function(exports, module) { module.exports = window.require('callsite/index.js'); }
 
 });
-require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1389093656000,"mtime":1385409966000,"ctime":1389093405000},"/lib/Extension.js":{"atime":1389093423000,"mtime":1389093412000,"ctime":1389093412000},"/lib/Helpers.js":{"atime":1389093423000,"mtime":1389093412000,"ctime":1389093412000},"callsite/index.js":{"atime":1389098455000,"mtime":1359062982000,"ctime":1389098450000},"/lib/EasyConfiguration.js":{"atime":1389103519000,"mtime":1389103192000,"ctime":1389103192000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1389103739000,"mtime":1389103733000,"ctime":1389103733000},"/test/browser/tests/Helpers.coffee":{"atime":1389093388000,"mtime":1389093388000,"ctime":1389093388000},"/test/data/advanced.json":{"atime":1389093656000,"mtime":1385133048000,"ctime":1385133048000},"/test/data/circular.json":{"atime":1389093388000,"mtime":1389093388000,"ctime":1389093388000},"/test/data/config.json":{"atime":1389093656000,"mtime":1385131455000,"ctime":1385131455000},"/test/data/environments.json":{"atime":1389098316000,"mtime":1389098315000,"ctime":1389098315000},"/test/data/environmentsNoCommon.json":{"atime":1389097038000,"mtime":1389097036000,"ctime":1389097036000},"/test/data/other.json":{"atime":1389093656000,"mtime":1384939927000,"ctime":1384939927000},"/test/data/unknownSection.json":{"atime":1389093656000,"mtime":1385132042000,"ctime":1385132042000},"/package.json":{"atime":1389098449000,"mtime":1389098440000,"ctime":1389098440000},"recursive-merge/package.json":{"atime":1389093423000,"mtime":1389093405000,"ctime":1389093405000},"callsite/package.json":{"atime":1389098455000,"mtime":1389098450000,"ctime":1389098450000}});
+require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1389093656000,"mtime":1385409966000,"ctime":1389093405000},"/lib/Extension.js":{"atime":1389093423000,"mtime":1389093412000,"ctime":1389093412000},"/lib/Helpers.js":{"atime":1389093423000,"mtime":1389093412000,"ctime":1389093412000},"callsite/index.js":{"atime":1389098455000,"mtime":1359062982000,"ctime":1389098450000},"/lib/EasyConfiguration.js":{"atime":1389104113000,"mtime":1389104110000,"ctime":1389104110000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1389103739000,"mtime":1389103733000,"ctime":1389103733000},"/test/browser/tests/Helpers.coffee":{"atime":1389093388000,"mtime":1389093388000,"ctime":1389093388000},"/test/data/advanced.json":{"atime":1389093656000,"mtime":1385133048000,"ctime":1385133048000},"/test/data/circular.json":{"atime":1389093388000,"mtime":1389093388000,"ctime":1389093388000},"/test/data/config.json":{"atime":1389093656000,"mtime":1385131455000,"ctime":1385131455000},"/test/data/environments.json":{"atime":1389098316000,"mtime":1389098315000,"ctime":1389098315000},"/test/data/environmentsNoCommon.json":{"atime":1389097038000,"mtime":1389097036000,"ctime":1389097036000},"/test/data/other.json":{"atime":1389093656000,"mtime":1384939927000,"ctime":1384939927000},"/test/data/unknownSection.json":{"atime":1389093656000,"mtime":1385132042000,"ctime":1385132042000},"/package.json":{"atime":1389098449000,"mtime":1389098440000,"ctime":1389098440000},"recursive-merge/package.json":{"atime":1389093423000,"mtime":1389093405000,"ctime":1389093405000},"callsite/package.json":{"atime":1389098455000,"mtime":1389098450000,"ctime":1389098450000}});
 require.version = '5.5.1';
 
 /** run section **/

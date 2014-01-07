@@ -33,18 +33,18 @@ class EasyConfiguration
 
 
 	constructor: (@fileName) ->
+		@reserved = ['includes', 'parameters', 'common']
+		@extensions = {}
+		@files = []
+		@_parameters = {}
+		@parameters = {}
+
 		if @fileName[0] == '.' && isWindow
 			throw new Error 'Relative paths to config files are not supported in browser.'
 
 		if @fileName[0] == '.'
 			stack = callsite()
 			@fileName = path.join(path.dirname(stack[1].getFileName()), @fileName)
-
-		@reserved = ['includes', 'parameters', 'common']
-		@extensions = {}
-		@files = []
-		@_parameters = {}
-		@parameters = {}
 
 
 	getEnvironment: ->
