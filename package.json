@@ -31,6 +31,10 @@
 		"mocha": "~1.14.0"
 	},
 	"scripts": {
-		"test": "cd ./test; echo \"Testing in node:\"; mocha ./node/index.js --reporter spec; cd ./browser; echo \"Testing in browser:\"; mocha-phantomjs ./index.html;"
+		"test": "npm run test-node && npm run test-browser",
+		"build-and-test": "npm run test-build && npm run test",
+		"test-build": "cd ./test/browser; simq build;",
+		"test-node": "mocha ./test/node/index.js --reporter spec",
+		"test-browser": "mocha-phantomjs ./test/browser/index.html"
 	}
 }
