@@ -1,10 +1,10 @@
 expect = require('chai').expect
 path = require 'path'
 
-EasyConfiguration = require '../../lib/EasyConfiguration'
-Extension = require '../../lib/Extension'
+EasyConfiguration = require '../../../lib/EasyConfiguration'
+Extension = require '../../../lib/Extension'
 
-dir = path.normalize(__dirname + '/../data')
+dir = path.normalize(__dirname + '/../../data')
 
 configuration = null
 

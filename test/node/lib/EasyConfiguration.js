@@ -6,11 +6,11 @@
 
   path = require('path');
 
-  EasyConfiguration = require('../../lib/EasyConfiguration');
+  EasyConfiguration = require('../../../lib/EasyConfiguration');
 
-  Extension = require('../../lib/Extension');
+  Extension = require('../../../lib/Extension');
 
-  dir = path.normalize(__dirname + '/../data');
+  dir = path.normalize(__dirname + '/../../data');
 
   configuration = null;
 

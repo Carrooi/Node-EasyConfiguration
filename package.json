@@ -1,7 +1,7 @@
 {
 	"name": "easy-configuration",
 	"description": "Simply extensible loader for json config files",
-	"version": "1.6.6",
+	"version": "2.0.0",
 	"author": {
 		"name": "David Kudera",
 		"email": "sakren@gmail.com"

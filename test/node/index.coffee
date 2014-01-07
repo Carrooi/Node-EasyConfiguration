@@ -1,2 +1,0 @@
-require './Helpers'
-require './EasyConfiguration'

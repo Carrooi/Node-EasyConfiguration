@@ -2,9 +2,9 @@ expect = require('chai').expect
 path = require 'path'
 fs = require 'fs'
 
-Helpers = require '../../lib/Helpers'
+Helpers = require '../../../lib/Helpers'
 
-dir = path.normalize(__dirname + '/../data')
+dir = path.normalize(__dirname + '/../../data')
 
 describe 'Helpers', ->
 
