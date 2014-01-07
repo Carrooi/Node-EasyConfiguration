@@ -117,22 +117,20 @@ console.log(config.parameters.database.password);		// output: qwerty12345
 
 With this setup, configurator will load data from `production` section merged with `common` section.
 
-## Own sections - main feature
+## Own sections
 
-When you will try to add own section, Easy Configuration will tell you, that section was found,
-but there is no corresponding extension.
-There is example of registration a new one.
+As you could see, there are prepared two base sections (`parameters` and `includes`).
+
+But you can create your own special sections. You just need to register them.
 
 ```
 var Configuration = require('easy-configuration');
 var config = new Configuration('./config.json');
 
-config.addSection('packages');
+config.addSection('packages');				// register new section
 
-var data = config.load();
+var packages = config.load().packages;		// data from packages section in config.json file
 ```
-
-Now you will be able to add new section with name "packages"
 
 ## Parameters in own sections
 
@@ -140,6 +138,7 @@ In your sections, you can use parameters from section "parameters".
 
 ```
 {
+	"parameters": { ... },
 	"packages": {
 		"application": "%basePath%/application.js",
 		"translator": {
@@ -163,9 +162,9 @@ In your sections, you can use parameters from section "parameters".
 }
 ```
 
-## Customize packages
+## Customize sections
 
-Sometimes you may want to customize output of your package. Most simple way is to rewrite method loadConfiguration
+Sometimes you may want to customize output of your section. Most simple way is to rewrite method loadConfiguration
 of default Extension class.
 For example we always want some other data in our section, even if they are not in config file - let's say "defaults".
 
@@ -185,17 +184,14 @@ var defaults = {
 };
 
 section.loadConfiguration = function() {
-	return this.getConfig(defaults);
+	return this.getConfig(defaults);		// data from your section will be merged with defaults variable
 };
 
-var data = config.load();
+var packages = config.load().packages;		// updated data with defaults
 ```
 
-Method getConfig has got one optional argument and it is your defaults variable. This method will return configuration
-only of your section merged with defaults argument (if any).
-Of course, there can be more complex code.
-
 EasyConfiguration class has got one other useful method and it is merge (using [recursive-merge](https://npmjs.org/package/recursive-merge) package).
+With this you can create more complex sections.
 
 ```
 var Configuration = require('easy-configuration');
@@ -229,7 +225,7 @@ section.loadConfiguration = function() {
 	return config;
 };
 
-var data = config.load();
+var packages = config.load().packages;
 ```
 
 ### After compile
@@ -244,7 +240,7 @@ data.
 
 ```
 section.afterCompile = function(config) {
-	return doSomething(config);
+	return doSomeMagic(config);
 };
 ```
 
@@ -276,6 +272,7 @@ $ npm test
 	+ Added badges
 	+ Added support for different environments
 	+ Loading config files with relative paths in node.js
+	+ Better documentation
 
 * 1.6.3 - 1.6.6
 	+ Bugs in IE8
