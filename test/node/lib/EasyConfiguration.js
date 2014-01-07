@@ -18,6 +18,13 @@
     beforeEach(function() {
       return configuration = new EasyConfiguration("" + dir + "/config.json");
     });
+    describe('#constructor()', function() {
+      return it('should load configuration with relative path', function() {
+        configuration = new EasyConfiguration('../../data/config.json');
+        configuration.load();
+        return expect(configuration.parameters).to.be.an["instanceof"](Object);
+      });
+    });
     describe('#load()', function() {
       it('should return loaded configuration without parameters', function() {
         return expect(configuration.load()).to.be.eql({});

@@ -16,14 +16,12 @@ $ npm install easy-configuration
 
 ```
 var Configuration = require('easy-configuration');
-var config = new Configuration('/var/data/config.json');
+var config = new Configuration('./my/config.json');
 
 var data = config.load();
 ```
 
-Be careful with setting your path to the config file. Easy-Configuration uses required instead of fs module, because of
-ability to use it in browser. If you will set this path relatively, then it will be relative to the Easy-Configuration
-file, not to your actual file.
+**Relative paths to config files are supported only on node (not in browser)!!!**
 
 ## Parameters
 
@@ -278,6 +276,7 @@ $ npm test
 	+ Tests frameworks does not need to be installed globally (are in devDependencies)
 	+ Added badges
 	+ Added support for different environments
+	+ Loading config files with relative paths in node.js
 
 * 1.6.3 - 1.6.6
 	+ Bugs in IE8

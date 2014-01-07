@@ -14,6 +14,13 @@ describe 'EasyConfiguration', ->
 		configuration = new EasyConfiguration("#{dir}/config.json")
 	)
 
+	describe '#constructor()', ->
+
+		it 'should load configuration with relative path', ->
+			configuration = new EasyConfiguration('../../data/config.json')
+			configuration.load()
+			expect(configuration.parameters).to.be.an.instanceof(Object)
+
 	describe '#load()', ->
 
 		it 'should return loaded configuration without parameters', ->

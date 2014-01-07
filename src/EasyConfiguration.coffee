@@ -3,6 +3,12 @@ merge = require 'recursive-merge'
 Extension = require './Extension'
 Helpers = require './Helpers'
 
+isWindow = typeof window != 'undefined'
+
+if !isWindow
+	callsite = require 'callsite'
+	path = require 'path'
+
 class EasyConfiguration
 
 
@@ -27,6 +33,13 @@ class EasyConfiguration
 
 
 	constructor: (@fileName) ->
+		if @fileName[0] == '.' && isWindow
+			throw new Error 'Relative paths to config files are not supported in browser.'
+
+		if @fileName[0] == '.'
+			stack = callsite()
+			@fileName = path.join(path.dirname(stack[1].getFileName()), @fileName)
+
 		@reserved = ['includes', 'parameters', 'common']
 		@extensions = {}
 		@files = []

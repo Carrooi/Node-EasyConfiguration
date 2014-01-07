@@ -11,6 +11,11 @@ describe 'EasyConfiguration', ->
 		configuration = new EasyConfiguration("#{dir}/config.json")
 	)
 
+	describe '#constructor()', ->
+
+		it 'should throw an error for relative paths', ->
+			expect( -> new EasyConfiguration('../../data/config.json')).to.throw(Error, 'Relative paths to config files are not supported in browser.')
+
 	describe '#load()', ->
 
 		it 'should return loaded configuration without parameters', ->
