@@ -1,0 +1,26 @@
+{
+	"common": {
+		"parameters": {
+			"database": {
+				"host": "127.0.0.1",
+				"database": "db",
+				"user": "root",
+				"password": ""
+			}
+		}
+	},
+	"production": {
+		"parameters": {
+			"database":  {
+				"password": "qwerty"
+			}
+		}
+	},
+	"development": {
+		"parameters": {
+			"database":  {
+				"password": "toor"
+			}
+		}
+	}
+}

@@ -63,7 +63,7 @@
         return expect(configuration.getParameter('paths.videos')).to.be.equal('./www/videos');
       });
     });
-    return describe('sections', function() {
+    describe('sections', function() {
       it('should throw an error for unknown section', function() {
         configuration = new EasyConfiguration("" + dir + "/unknownSection");
         return expect(function() {
@@ -120,6 +120,43 @@
             run: true,
             favicon: null,
             cache: './www/temp/cache'
+          }
+        });
+      });
+    });
+    return describe('environments', function() {
+      it('should load data from base environment section', function() {
+        configuration = new EasyConfiguration("" + dir + "/environments");
+        configuration.load();
+        return expect(configuration.parameters).to.be.eql({
+          database: {
+            host: '127.0.0.1',
+            database: 'db',
+            user: 'root',
+            password: 'qwerty'
+          }
+        });
+      });
+      it('should load data from different environment section', function() {
+        configuration = new EasyConfiguration("" + dir + "/environments");
+        configuration.setEnvironment('development');
+        configuration.load();
+        return expect(configuration.parameters).to.be.eql({
+          database: {
+            host: '127.0.0.1',
+            database: 'db',
+            user: 'root',
+            password: 'toor'
+          }
+        });
+      });
+      return it('should load data from local environment section without common section', function() {
+        configuration = new EasyConfiguration("" + dir + "/environmentsNoCommon");
+        configuration.setEnvironment('local');
+        configuration.load();
+        return expect(configuration.parameters).to.be.eql({
+          database: {
+            password: 'toor'
           }
         });
       });

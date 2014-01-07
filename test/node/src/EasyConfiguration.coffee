@@ -105,3 +105,37 @@ describe 'EasyConfiguration', ->
 					favicon: null
 					cache: './www/temp/cache'
 			)
+
+	describe 'environments', ->
+
+		it 'should load data from base environment section', ->
+			configuration = new EasyConfiguration("#{dir}/environments")
+			configuration.load()
+			expect(configuration.parameters).to.be.eql(
+				database:
+					host: '127.0.0.1'
+					database: 'db'
+					user: 'root'
+					password: 'qwerty'
+			)
+
+		it 'should load data from different environment section', ->
+			configuration = new EasyConfiguration("#{dir}/environments")
+			configuration.setEnvironment('development')
+			configuration.load()
+			expect(configuration.parameters).to.be.eql(
+				database:
+					host: '127.0.0.1'
+					database: 'db'
+					user: 'root'
+					password: 'toor'
+			)
+
+		it 'should load data from local environment section without common section', ->
+			configuration = new EasyConfiguration("#{dir}/environmentsNoCommon")
+			configuration.setEnvironment('local')
+			configuration.load()
+			expect(configuration.parameters).to.be.eql(
+				database:
+					password: 'toor'
+			)

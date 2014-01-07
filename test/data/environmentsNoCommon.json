@@ -1,0 +1,16 @@
+{
+	"production": {
+		"parameters": {
+			"database":  {
+				"password": "qwerty"
+			}
+		}
+	},
+	"local": {
+		"parameters": {
+			"database":  {
+				"password": "toor"
+			}
+		}
+	}
+}

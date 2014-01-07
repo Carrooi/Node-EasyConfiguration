@@ -11,7 +11,9 @@ class EasyConfiguration
 
 	fileName: null
 
-	reserved: ['includes', 'parameters']
+	reserved: null
+
+	env: null
 
 	extensions: null
 
@@ -25,10 +27,22 @@ class EasyConfiguration
 
 
 	constructor: (@fileName) ->
+		@reserved = ['includes', 'parameters', 'common']
 		@extensions = {}
 		@files = []
 		@_parameters = {}
 		@parameters = {}
+
+
+	getEnvironment: ->
+		if @env == null
+			@env = if process?env?NODE_ENV? then process.env.NODE_ENV else 'production'
+
+		return @env
+
+
+	setEnvironment: (@env) ->
+		@reserved.push(@env)
 
 
 	addSection: (name) ->
@@ -61,7 +75,7 @@ class EasyConfiguration
 
 	load: ->
 		if @data == null
-			config = @loadConfig(@fileName)
+			config = @loadConfig(@fileName, true)
 			data = @parse(config)
 
 			@files = data.files
@@ -71,9 +85,21 @@ class EasyConfiguration
 		return @data
 
 
-	loadConfig: (file) ->
+	loadConfig: (file, main = false) ->
 		data = require(file)
 		data = Helpers.clone(data, false)
+
+		env = @getEnvironment()
+
+		if main && (typeof data[env] != 'undefined' || typeof data.common != 'undefined')
+			if typeof data.common != 'undefined'
+				_data = data.common
+				if typeof data[env] != 'undefined'
+					_data = @merge(data[env], _data)
+			else
+				_data = data[env]
+
+			data = _data
 
 		if typeof data.includes != 'undefined'
 			for include in data.includes

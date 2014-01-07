@@ -26,6 +26,7 @@ ability to use it in browser. If you will set this path relatively, then it will
 file, not to your actual file.
 
 ## Parameters
+
 In default, this configurator contains two basic sections: parameters and includes.
 Parameters section can holds all your variables which you will need in other sections
 
@@ -43,6 +44,7 @@ Parameters section can holds all your variables which you will need in other sec
 ```
 
 ## Including other config files
+
 If you will add section includes, you can set list of files, which you want to merge with main config file.
 Paths to these config files must be relative to main config file.
 
@@ -54,7 +56,72 @@ Paths to these config files must be relative to main config file.
 }
 ```
 
+## Different environments
+
+You may need different configuration for different environments (like production or development). First think you need to
+do, is put your current configuration into `common` section.
+
+**This feature is applied only to main config files, not to files included from `includes` section.**
+**It will be automatically turned on when there will be `common` section or section with name of current environment.**
+
+```
+{
+	"common": {
+		"parameters": {
+			"database": {}
+		}
+	}
+}
+```
+
+Common section is base section for all environments. But other environments can rewrite everything in `common` section.
+
+```
+{
+	"common": {
+		"parameters": {
+			"database": {
+				"host": "127.0.0.1",
+				"user": "root",
+				"database": "my-db"
+			}
+		}
+	},
+	"production": {
+		"parameters": {
+			"database": {
+				"password": "qwerty12345"
+			}
+		}
+	},
+	"development": {
+		"parameters": {
+			"database": {
+				"password": "root"
+			}
+		}
+	}
+}
+```
+
+Now we have got configuration with two different setups for database.
+
+```
+var config = new Configuration('/var/data/config.json');
+config.setEnvironment('development');
+
+var data = config.load()
+```
+
+You can also set environment with `NODE_ENV`:
+```
+process.env.NODE_ENV = 'development';
+
+var data = config.load();
+```
+
 ## Own sections - main feature
+
 When you will try to add own section, Easy Configuration will tell you, that section was found,
 but there is no corresponding extension.
 There is example of registration a new one.
@@ -71,6 +138,7 @@ var data = config.load();
 Now you will be able to add new section with name "packages"
 
 ## Parameters in own sections
+
 In your sections, you can use parameters from section "parameters".
 
 ```
@@ -99,6 +167,7 @@ In your sections, you can use parameters from section "parameters".
 ```
 
 ## Customize packages
+
 Sometimes you may want to customize output of your package. Most simple way is to rewrite method loadConfiguration
 of default Extension class.
 For example we always want some other data in our section, even if they are not in config file - let's say "defaults".
@@ -208,6 +277,7 @@ $ npm test
 	+ Optimized tests
 	+ Tests frameworks does not need to be installed globally (are in devDependencies)
 	+ Added badges
+	+ Added support for different environments
 
 * 1.6.3 - 1.6.6
 	+ Bugs in IE8
