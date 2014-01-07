@@ -56,7 +56,7 @@ Paths to these config files must be relative to main config file.
 
 ## Different environments
 
-You may need different configuration for different environments (like production or development). First think you need to
+You may need different configuration for different environments (like production or development). First thing you need to
 do, is put your current configuration into `common` section.
 
 **This feature is applied only to main config files, not to files included from `includes` section.**
