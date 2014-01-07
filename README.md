@@ -202,6 +202,7 @@ $ npm test
 
 * 2.0.0
 	+ Optimized tests
+	+ Tests frameworks does not need to be installed globally (are in devDependencies)
 
 * 1.6.3 - 1.6.6
 	+ Bugs in IE8
