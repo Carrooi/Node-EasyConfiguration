@@ -57,7 +57,7 @@ Paths to these config files must be relative to main config file.
 ## Different environments
 
 You may need different configuration for different environments (like production or development). First thing you need to
-do, is put your current configuration into `common` section.
+do, is put your whole current configuration (also with all other sections - see below) into `common` section.
 
 **This feature is applied only to main config files, not to files included from `includes` section.**
 **It will be automatically turned on when there will be `common` section or section with name of current environment.**
@@ -115,7 +115,7 @@ var data = config.load()
 console.log(config.parameters.database.password);		// output: qwerty12345
 ```
 
-With this setup, configurator will load data `production` section merged with `common` section.
+With this setup, configurator will load data from `production` section merged with `common` section.
 
 ## Own sections - main feature
 
