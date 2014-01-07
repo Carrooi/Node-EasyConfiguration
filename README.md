@@ -1,3 +1,7 @@
+[![NPM version](https://badge.fury.io/js/easy-configuration.png)](http://badge.fury.io/js/easy-configuration)
+[![Dependency Status](https://gemnasium.com/sakren/node-easy-configuration.png)](https://gemnasium.com/sakren/node-easy-configuration)
+[![Build Status](https://travis-ci.org/sakren/node-easy-configuration.png?branch=master)](https://travis-ci.org/sakren/node-easy-configuration)
+
 # Easy Configuration
 
 Simply extensible loader for json config files. This package is inspired by configuration in PHP framework [Nette](http://nette.org/en/).
@@ -203,6 +207,7 @@ $ npm test
 * 2.0.0
 	+ Optimized tests
 	+ Tests frameworks does not need to be installed globally (are in devDependencies)
+	+ Added badges
 
 * 1.6.3 - 1.6.6
 	+ Bugs in IE8
