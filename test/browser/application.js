@@ -508,15 +508,13 @@
 	  EasyConfiguration = (function() {
 	    EasyConfiguration.PARAMETER_REGEXP = /%([a-zA-Z.-_]+)%/g;
 	
-	    EasyConfiguration.prototype.fileName = null;
+	    EasyConfiguration.prototype.files = null;
 	
 	    EasyConfiguration.prototype.reserved = null;
 	
-	    EasyConfiguration.prototype.env = null;
-	
 	    EasyConfiguration.prototype.extensions = null;
 	
-	    EasyConfiguration.prototype.files = null;
+	    EasyConfiguration.prototype.includes = null;
 	
 	    EasyConfiguration.prototype._parameters = null;
 	
@@ -524,33 +522,41 @@
 	
 	    EasyConfiguration.prototype.data = null;
 	
-	    function EasyConfiguration(fileName) {
-	      var stack;
-	      this.fileName = fileName;
+	    function EasyConfiguration(_path, section) {
+	      if (_path == null) {
+	        _path = null;
+	      }
+	      if (section == null) {
+	        section = 'production';
+	      }
+	      this.files = {};
 	      this.reserved = ['includes', 'parameters', 'common'];
 	      this.extensions = {};
-	      this.files = [];
+	      this.includes = {};
 	      this._parameters = {};
 	      this.parameters = {};
-	      if (this.fileName[0] === '.' && isWindow) {
-	        throw new Error('Relative paths to config files are not supported in browser.');
-	      }
-	      if (this.fileName[0] === '.') {
-	        stack = callsite();
-	        this.fileName = path.join(path.dirname(stack[1].getFileName()), this.fileName);
+	      if (_path !== null) {
+	        this.addConfig(_path, section);
 	      }
 	    }
 	
-	    EasyConfiguration.prototype.getEnvironment = function() {
-	      if (this.env === null) {
-	        this.env = (typeof process === "function" ? process(typeof env === "function" ? env(typeof NODE_ENV !== "undefined" && NODE_ENV !== null) : void 0) : void 0) ? process.env.NODE_ENV : 'production';
+	    EasyConfiguration.prototype.addConfig = function(_path, section) {
+	      var previous, stack;
+	      if (section == null) {
+	        section = 'production';
 	      }
-	      return this.env;
-	    };
-	
-	    EasyConfiguration.prototype.setEnvironment = function(env) {
-	      this.env = env;
-	      return this.reserved.push(this.env);
+	      if (_path[0] === '.' && isWindow) {
+	        throw new Error('Relative paths to config files are not supported in browser.');
+	      }
+	      if (_path[0] === '.') {
+	        stack = callsite();
+	        previous = stack[1].getFileName() === __filename ? stack[2] : stack[1];
+	        _path = path.join(path.dirname(previous.getFileName()), _path);
+	      }
+	      if (Helpers.arrayIndexOf(this.reserved, section) === -1) {
+	        this.reserved.push(section);
+	      }
+	      return this.files[_path] = section;
 	    };
 	
 	    EasyConfiguration.prototype.addSection = function(name) {
@@ -581,33 +587,37 @@
 	    };
 	
 	    EasyConfiguration.prototype.load = function() {
-	      var config, data;
+	      var config, data, section, _path, _ref;
 	      if (this.data === null) {
-	        config = this.loadConfig(this.fileName, true);
+	        config = {};
+	        _ref = this.files;
+	        for (_path in _ref) {
+	          section = _ref[_path];
+	          config = this.merge(this.loadConfig(_path, section), config);
+	        }
 	        data = this.parse(config);
-	        this.files = data.files;
+	        this.includes = data.files;
 	        this.parameters = data.parameters;
 	        this.data = data.sections;
 	      }
 	      return this.data;
 	    };
 	
-	    EasyConfiguration.prototype.loadConfig = function(file, main) {
-	      var data, env, include, _data, _i, _len, _ref;
-	      if (main == null) {
-	        main = false;
+	    EasyConfiguration.prototype.loadConfig = function(file, section) {
+	      var data, include, _data, _i, _len, _path, _ref;
+	      if (section == null) {
+	        section = 'production';
 	      }
 	      data = require(file);
 	      data = Helpers.clone(data, false);
-	      env = this.getEnvironment();
-	      if (main && (typeof data[env] !== 'undefined' || typeof data.common !== 'undefined')) {
+	      if (typeof data[section] !== 'undefined' || typeof data.common !== 'undefined') {
 	        if (typeof data.common !== 'undefined') {
 	          _data = data.common;
-	          if (typeof data[env] !== 'undefined') {
-	            _data = this.merge(data[env], _data);
+	          if (typeof data[section] !== 'undefined') {
+	            _data = this.merge(data[section], _data);
 	          }
 	        } else {
-	          _data = data[env];
+	          _data = data[section];
 	        }
 	        data = _data;
 	      }
@@ -615,8 +625,8 @@
 	        _ref = data.includes;
 	        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
 	          include = _ref[_i];
-	          path = Helpers.normalizePath(Helpers.dirName(file) + '/' + include);
-	          data = this.merge(data, this.loadConfig(path));
+	          _path = Helpers.normalizePath(Helpers.dirName(file) + '/' + include);
+	          data = this.merge(data, this.loadConfig(_path));
 	        }
 	      }
 	      return data;
@@ -888,7 +898,7 @@
 	        });
 	      });
 	    });
-	    return describe('environments', function() {
+	    describe('environments', function() {
 	      it('should load data from base environment section', function() {
 	        configuration = new EasyConfiguration("" + dir + "/environments");
 	        configuration.load();
@@ -902,8 +912,7 @@
 	        });
 	      });
 	      it('should load data from different environment section', function() {
-	        configuration = new EasyConfiguration("" + dir + "/environments");
-	        configuration.setEnvironment('development');
+	        configuration = new EasyConfiguration("" + dir + "/environments", 'development');
 	        configuration.load();
 	        return expect(configuration.parameters).to.be.eql({
 	          database: {
@@ -915,12 +924,27 @@
 	        });
 	      });
 	      return it('should load data from local environment section without common section', function() {
-	        configuration = new EasyConfiguration("" + dir + "/environmentsNoCommon");
-	        configuration.setEnvironment('local');
+	        configuration = new EasyConfiguration("" + dir + "/environmentsNoCommon", 'local');
 	        configuration.load();
 	        return expect(configuration.parameters).to.be.eql({
 	          database: {
 	            password: 'toor'
+	          }
+	        });
+	      });
+	    });
+	    return describe('#addConfig()', function() {
+	      return it('should add more config files', function() {
+	        configuration = new EasyConfiguration;
+	        configuration.addConfig("" + dir + "/environmentsNoCommon", 'local');
+	        configuration.addConfig("" + dir + "/environments", 'production');
+	        configuration.load();
+	        return expect(configuration.parameters).to.be.eql({
+	          database: {
+	            password: 'qwerty',
+	            host: '127.0.0.1',
+	            database: 'db',
+	            user: 'root'
 	          }
 	        });
 	      });
@@ -1390,7 +1414,7 @@
 , 'callsite': function(exports, module) { module.exports = window.require('callsite/index.js'); }
 
 });
-require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1389093656000,"mtime":1385409966000,"ctime":1389093405000},"/lib/Extension.js":{"atime":1389093423000,"mtime":1389093412000,"ctime":1389093412000},"/lib/Helpers.js":{"atime":1389093423000,"mtime":1389093412000,"ctime":1389093412000},"callsite/index.js":{"atime":1389098455000,"mtime":1359062982000,"ctime":1389098450000},"/lib/EasyConfiguration.js":{"atime":1389104113000,"mtime":1389104110000,"ctime":1389104110000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1389103739000,"mtime":1389103733000,"ctime":1389103733000},"/test/browser/tests/Helpers.coffee":{"atime":1389093388000,"mtime":1389093388000,"ctime":1389093388000},"/test/data/advanced.json":{"atime":1389093656000,"mtime":1385133048000,"ctime":1385133048000},"/test/data/circular.json":{"atime":1389093388000,"mtime":1389093388000,"ctime":1389093388000},"/test/data/config.json":{"atime":1389093656000,"mtime":1385131455000,"ctime":1385131455000},"/test/data/environments.json":{"atime":1389098316000,"mtime":1389098315000,"ctime":1389098315000},"/test/data/environmentsNoCommon.json":{"atime":1389097038000,"mtime":1389097036000,"ctime":1389097036000},"/test/data/other.json":{"atime":1389093656000,"mtime":1384939927000,"ctime":1384939927000},"/test/data/unknownSection.json":{"atime":1389093656000,"mtime":1385132042000,"ctime":1385132042000},"/package.json":{"atime":1389098449000,"mtime":1389098440000,"ctime":1389098440000},"recursive-merge/package.json":{"atime":1389093423000,"mtime":1389093405000,"ctime":1389093405000},"callsite/package.json":{"atime":1389098455000,"mtime":1389098450000,"ctime":1389098450000}});
+require.__setStats({"recursive-merge/lib/Merge.js":{"atime":1389093656000,"mtime":1385409966000,"ctime":1389093405000},"/lib/Extension.js":{"atime":1389093423000,"mtime":1389093412000,"ctime":1389093412000},"/lib/Helpers.js":{"atime":1389093423000,"mtime":1389093412000,"ctime":1389093412000},"callsite/index.js":{"atime":1389098455000,"mtime":1359062982000,"ctime":1389098450000},"/lib/EasyConfiguration.js":{"atime":1389106579000,"mtime":1389106575000,"ctime":1389106575000},"/test/browser/tests/EasyConfiguration.coffee":{"atime":1389106271000,"mtime":1389106264000,"ctime":1389106264000},"/test/browser/tests/Helpers.coffee":{"atime":1389093388000,"mtime":1389093388000,"ctime":1389093388000},"/test/data/advanced.json":{"atime":1389093656000,"mtime":1385133048000,"ctime":1385133048000},"/test/data/circular.json":{"atime":1389093388000,"mtime":1389093388000,"ctime":1389093388000},"/test/data/config.json":{"atime":1389093656000,"mtime":1385131455000,"ctime":1385131455000},"/test/data/environments.json":{"atime":1389098316000,"mtime":1389098315000,"ctime":1389098315000},"/test/data/environmentsNoCommon.json":{"atime":1389097038000,"mtime":1389097036000,"ctime":1389097036000},"/test/data/other.json":{"atime":1389093656000,"mtime":1384939927000,"ctime":1384939927000},"/test/data/unknownSection.json":{"atime":1389093656000,"mtime":1385132042000,"ctime":1385132042000},"/package.json":{"atime":1389098449000,"mtime":1389098440000,"ctime":1389098440000},"recursive-merge/package.json":{"atime":1389093423000,"mtime":1389093405000,"ctime":1389093405000},"callsite/package.json":{"atime":1389098455000,"mtime":1389098450000,"ctime":1389098450000}});
 require.version = '5.5.1';
 
 /** run section **/

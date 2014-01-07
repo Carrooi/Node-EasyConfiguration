@@ -131,7 +131,7 @@
         });
       });
     });
-    return describe('environments', function() {
+    describe('environments', function() {
       it('should load data from base environment section', function() {
         configuration = new EasyConfiguration("" + dir + "/environments");
         configuration.load();
@@ -145,8 +145,7 @@
         });
       });
       it('should load data from different environment section', function() {
-        configuration = new EasyConfiguration("" + dir + "/environments");
-        configuration.setEnvironment('development');
+        configuration = new EasyConfiguration("" + dir + "/environments", 'development');
         configuration.load();
         return expect(configuration.parameters).to.be.eql({
           database: {
@@ -158,12 +157,27 @@
         });
       });
       return it('should load data from local environment section without common section', function() {
-        configuration = new EasyConfiguration("" + dir + "/environmentsNoCommon");
-        configuration.setEnvironment('local');
+        configuration = new EasyConfiguration("" + dir + "/environmentsNoCommon", 'local');
         configuration.load();
         return expect(configuration.parameters).to.be.eql({
           database: {
             password: 'toor'
+          }
+        });
+      });
+    });
+    return describe('#addConfig()', function() {
+      return it('should add more config files', function() {
+        configuration = new EasyConfiguration;
+        configuration.addConfig('../../data/environmentsNoCommon', 'local');
+        configuration.addConfig('../../data/environments', 'production');
+        configuration.load();
+        return expect(configuration.parameters).to.be.eql({
+          database: {
+            password: 'qwerty',
+            host: '127.0.0.1',
+            database: 'db',
+            user: 'root'
           }
         });
       });

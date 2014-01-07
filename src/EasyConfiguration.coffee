@@ -15,15 +15,13 @@ class EasyConfiguration
 	@PARAMETER_REGEXP: /%([a-zA-Z.-_]+)%/g
 
 
-	fileName: null
+	files: null
 
 	reserved: null
 
-	env: null
-
 	extensions: null
 
-	files: null
+	includes: null
 
 	_parameters: null
 
@@ -32,30 +30,31 @@ class EasyConfiguration
 	data: null
 
 
-	constructor: (@fileName) ->
+	constructor: (_path = null, section = 'production') ->
+		@files = {}
 		@reserved = ['includes', 'parameters', 'common']
 		@extensions = {}
-		@files = []
+		@includes = {}
 		@_parameters = {}
 		@parameters = {}
 
-		if @fileName[0] == '.' && isWindow
+		if _path != null
+			@addConfig(_path, section)
+
+
+	addConfig: (_path, section = 'production') ->
+		if _path[0] == '.' && isWindow
 			throw new Error 'Relative paths to config files are not supported in browser.'
 
-		if @fileName[0] == '.'
+		if _path[0] == '.'
 			stack = callsite()
-			@fileName = path.join(path.dirname(stack[1].getFileName()), @fileName)
+			previous = if stack[1].getFileName() == __filename then stack[2] else stack[1]		# may be called from @constructor
+			_path = path.join(path.dirname(previous.getFileName()), _path)
 
+		if Helpers.arrayIndexOf(@reserved, section) == -1
+			@reserved.push(section)
 
-	getEnvironment: ->
-		if @env == null
-			@env = if process?env?NODE_ENV? then process.env.NODE_ENV else 'production'
-
-		return @env
-
-
-	setEnvironment: (@env) ->
-		@reserved.push(@env)
+		@files[_path] = section
 
 
 	addSection: (name) ->
@@ -88,36 +87,37 @@ class EasyConfiguration
 
 	load: ->
 		if @data == null
-			config = @loadConfig(@fileName, true)
+			config = {}
+			for _path, section of @files
+				config = @merge(@loadConfig(_path, section), config)
+
 			data = @parse(config)
 
-			@files = data.files
+			@includes = data.files
 			@parameters = data.parameters
 			@data = data.sections
 
 		return @data
 
 
-	loadConfig: (file, main = false) ->
+	loadConfig: (file, section = 'production') ->
 		data = require(file)
 		data = Helpers.clone(data, false)
 
-		env = @getEnvironment()
-
-		if main && (typeof data[env] != 'undefined' || typeof data.common != 'undefined')
+		if typeof data[section] != 'undefined' || typeof data.common != 'undefined'
 			if typeof data.common != 'undefined'
 				_data = data.common
-				if typeof data[env] != 'undefined'
-					_data = @merge(data[env], _data)
+				if typeof data[section] != 'undefined'
+					_data = @merge(data[section], _data)
 			else
-				_data = data[env]
+				_data = data[section]
 
 			data = _data
 
 		if typeof data.includes != 'undefined'
 			for include in data.includes
-				path = Helpers.normalizePath(Helpers.dirName(file) + '/' + include)
-				data = @merge(data, @loadConfig(path))
+				_path = Helpers.normalizePath(Helpers.dirName(file) + '/' + include)
+				data = @merge(data, @loadConfig(_path))
 
 		return data
 

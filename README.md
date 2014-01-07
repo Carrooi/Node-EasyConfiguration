@@ -105,18 +105,17 @@ Common section is base section for all environments. But other environments can 
 Now we have got configuration with two different setups for database.
 
 ```
-var config = new Configuration('/var/data/config.json');
-config.setEnvironment('development');
+process.env.NODE_ENV = 'production';
+
+var config = new Configuration;
+config.addConfig('./some-config.json', process.env.NODE_ENV);		// or new Configuration('./some-config.json', process.env.NODE_ENV);
 
 var data = config.load()
+
+console.log(config.parameters.database.password);		// output: qwerty12345
 ```
 
-You can also set environment with `NODE_ENV`:
-```
-process.env.NODE_ENV = 'development';
-
-var data = config.load();
-```
+With this setup, configurator will load data `production` section merged with `common` section.
 
 ## Own sections - main feature
 

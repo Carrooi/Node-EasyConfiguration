@@ -127,8 +127,7 @@ describe 'EasyConfiguration', ->
 			)
 
 		it 'should load data from different environment section', ->
-			configuration = new EasyConfiguration("#{dir}/environments")
-			configuration.setEnvironment('development')
+			configuration = new EasyConfiguration("#{dir}/environments", 'development')
 			configuration.load()
 			expect(configuration.parameters).to.be.eql(
 				database:
@@ -139,10 +138,26 @@ describe 'EasyConfiguration', ->
 			)
 
 		it 'should load data from local environment section without common section', ->
-			configuration = new EasyConfiguration("#{dir}/environmentsNoCommon")
-			configuration.setEnvironment('local')
+			configuration = new EasyConfiguration("#{dir}/environmentsNoCommon", 'local')
 			configuration.load()
 			expect(configuration.parameters).to.be.eql(
 				database:
 					password: 'toor'
+			)
+
+	describe '#addConfig()', ->
+
+		it 'should add more config files', ->
+			configuration = new EasyConfiguration
+
+			configuration.addConfig('../../data/environmentsNoCommon', 'local')
+			configuration.addConfig('../../data/environments', 'production')
+			configuration.load()
+
+			expect(configuration.parameters).to.be.eql(
+				database:
+					password: 'qwerty'
+					host: '127.0.0.1'
+					database: 'db'
+					user: 'root'
 			)
