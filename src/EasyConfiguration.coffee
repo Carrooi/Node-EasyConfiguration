@@ -202,9 +202,10 @@ class EasyConfiguration
 
 		previous.push(parameter)
 
-		actual = actual.replace(EasyConfiguration.PARAMETER_REGEXP, (match, param) =>
-			return @_getParameter(param, previous)
-		)
+		if typeof actual == 'string'
+			actual = actual.replace(EasyConfiguration.PARAMETER_REGEXP, (match, param) =>
+				return @_getParameter(param, previous)
+			)
 
 		return actual
 
