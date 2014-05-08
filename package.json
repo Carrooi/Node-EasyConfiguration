@@ -1,7 +1,7 @@
 {
 	"name": "easy-configuration",
 	"description": "Simply extensible loader for json config files",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"author": {
 		"name": "David Kudera",
 		"email": "sakren@gmail.com"
@@ -34,7 +34,7 @@
 		"phantomjs": "~1.9.2-6"
 	},
 	"scripts": {
-		"test": "npm run test-node",
+		"test": "npm run test-node && npm run test-browser",
 		"build-and-test": "npm run test-build && npm run test",
 		"test-build": "cd ./test/browser; simq build;",
 		"test-node": "mocha ./test/node/index.js --reporter spec",
