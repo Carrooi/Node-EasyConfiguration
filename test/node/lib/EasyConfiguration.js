@@ -69,7 +69,7 @@
       it('should return parameter pointing to other parameter from included file', function() {
         return expect(configuration.getParameter('paths.videos')).to.be.equal('./www/videos');
       });
-      return it('should return object of parameters', function() {
+      it('should return object of parameters', function() {
         return expect(configuration.getParameter('paths')).to.be.eql({
           cdn: './cdn/data',
           lang: './www/lang',
@@ -77,6 +77,9 @@
           images: './www/images',
           videos: './www/videos'
         });
+      });
+      return it('should not expand parameters list in configuration', function() {
+        return expect(configuration.getParameter('pathsToCaching')).to.be.equal('%cached%');
       });
     });
     describe('sections', function() {
