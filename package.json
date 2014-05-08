@@ -34,7 +34,7 @@
 		"phantomjs": "~1.9.2-6"
 	},
 	"scripts": {
-		"test": "npm run test-node && npm run test-browser",
+		"test": "npm run test-node",
 		"build-and-test": "npm run test-build && npm run test",
 		"test-build": "cd ./test/browser; simq build;",
 		"test-node": "mocha ./test/node/index.js --reporter spec",

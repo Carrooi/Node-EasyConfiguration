@@ -72,6 +72,9 @@ describe 'EasyConfiguration', ->
 				videos: './www/videos'
 			)
 
+		it 'should not expand parameters list in configuration', ->
+			expect(configuration.getParameter('pathsToCaching')).to.be.equal('%cached%')
+
 	describe 'sections', ->
 
 		it 'should throw an error for unknown section', ->

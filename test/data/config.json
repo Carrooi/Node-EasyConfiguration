@@ -12,6 +12,7 @@
 		},
 		"cached": [
 			"%paths.translator%"
-		]
+		],
+		"pathsToCaching": "%cached%"
 	}
 }
