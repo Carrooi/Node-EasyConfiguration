@@ -165,7 +165,11 @@ class EasyConfiguration
 			switch _type.call(param)
 				when '[object String]'
 					parameters[name] = param.replace(EasyConfiguration.PARAMETER_REGEXP, (match, variable) =>
-						return @_getParameter(variable, [name])
+						result = @_getParameter(variable, [name])
+						if _type.call(result) in ['[object Object]', '[object Array]']
+							result = '%' + variable + '%'
+
+						return result
 					)
 				when '[object Object]', '[object Array]'
 					parameters[name] = @expandParameters(param)
@@ -202,9 +206,14 @@ class EasyConfiguration
 
 		previous.push(parameter)
 
-		actual = actual.replace(EasyConfiguration.PARAMETER_REGEXP, (match, param) =>
-			return @_getParameter(param, previous)
-		)
+		if typeof actual == 'string'
+			actual = actual.replace(EasyConfiguration.PARAMETER_REGEXP, (match, param) =>
+				result = @_getParameter(param, previous)
+				if Object.prototype.toString.call(result) in ['[object Object]', '[object Array]']
+					result = '%' + param + '%'
+
+				return result
+			)
 
 		return actual
 
@@ -214,7 +223,7 @@ class EasyConfiguration
 
 
 	merge: (left, right) ->
-		right = Helpers.clone(right, false)
+		right = Helpers.clone(right)
 		return merge(left, right)
 
 

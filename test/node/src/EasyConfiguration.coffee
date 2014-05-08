@@ -63,6 +63,18 @@ describe 'EasyConfiguration', ->
 		it 'should return parameter pointing to other parameter from included file', ->
 			expect(configuration.getParameter('paths.videos')).to.be.equal('./www/videos')
 
+		it 'should return object of parameters', ->
+			expect(configuration.getParameter('paths')).to.be.eql(
+				cdn: './cdn/data'
+				lang: './www/lang'
+				translator: './www/lang/translator.js'
+				images: './www/images'
+				videos: './www/videos'
+			)
+
+		it 'should not expand parameters list in configuration', ->
+			expect(configuration.getParameter('pathsToCaching')).to.be.equal('%cached%')
+
 	describe 'sections', ->
 
 		it 'should throw an error for unknown section', ->
