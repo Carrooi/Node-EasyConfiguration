@@ -266,6 +266,9 @@ $ npm test
 
 ## Changelog
 
+* 2.0.1
+	+ Optimized parsing parameters in config files
+
 * 2.0.0
 	+ Optimized tests
 	+ Tests frameworks does not need to be installed globally (are in devDependencies)
