@@ -1,10 +1,18 @@
-[![NPM version](https://badge.fury.io/js/easy-configuration.png)](http://badge.fury.io/js/easy-configuration)
-[![Dependency Status](https://gemnasium.com/sakren/node-easy-configuration.png)](https://gemnasium.com/sakren/node-easy-configuration)
-[![Build Status](https://travis-ci.org/sakren/node-easy-configuration.png?branch=master)](https://travis-ci.org/sakren/node-easy-configuration)
+[![NPM version](https://img.shields.io/npm/v/easy-configuration.svg?style=flat-square)](http://badge.fury.io/js/easy-configuration)
+[![Dependency Status](https://img.shields.io/gemnasium/Carrooi/Node-EasyConfiguration.svg?style=flat-square)](https://gemnasium.com/Carrooi/Node-EasyConfiguration)
+[![Build Status](https://img.shields.io/travis/Carrooi/Node-EasyConfiguration.svg?style=flat-square)](https://travis-ci.org/Carrooi/Node-EasyConfiguration)
 
 # Easy Configuration
 
 Simply extensible loader for json config files. This package is inspired by configuration in PHP framework [Nette](http://nette.org/en/).
+
+## Help
+
+Unfortunately I don't have any more time to maintain this repository :-( 
+
+Don't you want to save me and this project by taking over it?
+
+![sad cat](https://raw.githubusercontent.com/sakren/sakren.github.io/master/images/sad-kitten.jpg)
 
 ## Installing
 
@@ -265,6 +273,10 @@ $ npm test
 ```
 
 ## Changelog
+
+* 2.0.2
+	+ Move under Carrooi organization
+	+ Abandon package
 
 * 2.0.1
 	+ Optimized parsing parameters in config files
